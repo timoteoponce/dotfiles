@@ -8,7 +8,7 @@ Required tools:
 ## Installation
   -  Install the required software
   -  Clone the repository in your home folder
-  -  --Add the ZSHRC link to the local .zshrc-local--
+  -  ~~Add the ZSHRC link to the local .zshrc-local~~
   -  Run `rcup` 
 
 ```
