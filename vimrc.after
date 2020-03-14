@@ -1,10 +1,11 @@
 "set background=light
-"set background=dark
+set background=dark
 "colorscheme solarized
 "colorscheme jellybeans
 "colorscheme zenburn
+colorscheme railscasts2
 "colorscheme molokai
-colorscheme wombat
+"colorscheme wombat
 "colorscheme intellij
 "colorscheme base16-ashes
 "colorscheme railscasts

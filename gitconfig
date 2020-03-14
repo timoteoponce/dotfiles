@@ -25,6 +25,8 @@
   incoming = !git fetch && git log ..FETCH_HEAD
   pushH = push origin HEAD
   pullH = pull origin HEAD
+  code-changes = "!git log --format=format: --name-only | egrep -v '^$' | sort | uniq -c | sort -rg | head -10"
+  cc = "!git code-changes"
 
 [color]
   ui = auto

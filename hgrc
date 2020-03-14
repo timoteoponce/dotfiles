@@ -81,6 +81,7 @@ merge = diffmerge
 #merge = vimdiff
 editor = vim
 style=compact
+username=Timoteo Ponce <ponce.timoteo@gmail.com>
 
 #[hooks]  
 #pretxncommit.issue = hg log --template '{desc}\n' -r $HG_NODE | grep -E '^(CSSER|DEV)-[[:digit:]]+:'
