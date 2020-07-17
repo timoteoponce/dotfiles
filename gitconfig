@@ -38,6 +38,7 @@
   pager = less -FXRS
   editor = vim
 	excludesfile = /Users/timoteo/.gitignore_global
+	autocrlf = input
 
 [user]
   name = Timoteo Ponce
@@ -66,3 +67,12 @@
 	trustExitCode = true
 [credential]
 	helper = osxkeychain
+#[pager]
+#    diff = diff-so-fancy | less --tabs=2 -RFX
+#    show = diff-so-fancy | less --tabs=2 -RFX
+
+#[core]
+    #pager = delta --theme='ansi-dark'
+#    pager = delta 
+#[interactive]
+#    diffFilter = delta --color-only

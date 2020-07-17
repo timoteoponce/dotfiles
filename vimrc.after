@@ -1,10 +1,9 @@
 "set background=light
-set background=dark
+"set background=dark
 "colorscheme solarized
 "colorscheme jellybeans
 "colorscheme zenburn
-colorscheme railscasts2
-"colorscheme molokai
+colorscheme molokai
 "colorscheme wombat
 "colorscheme intellij
 "colorscheme base16-ashes
@@ -17,7 +16,7 @@ let NERDTreeIgnore = ['\.js.map$' ,'\.pyc$' ,'\.orig$' ,'node_modules' ,'target'
 unlet g:ctrlp_custom_ignore
 "let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git|hg\|target\|build\bower_components\|dist\'
 let g:ctrlp_custom_ignore = {
-      \ 'dir':  '\.git$\|\.hg$\|\.svn$\|bower_components$\|dist$\|node_modules$\|project_files$\|test$\|target$\|build$',
+      \ 'dir':  '\.git$\|\.hg$\|\.svn$\|bower_components$\|dist$\|node_modules$\|project_files$\|target$\|build$',
       \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$\|.map$\|.tmp$\|.rej$\|.orig$\|.class$\|.jar$\|.js.map$'
       \ }
 
@@ -34,3 +33,5 @@ set noswapfile
 " enable mouse resize on panes
 set mouse=n
 
+set wrap
+set linebreak

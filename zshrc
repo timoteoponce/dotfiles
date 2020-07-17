@@ -99,8 +99,20 @@ source ~/.sdkman/bin/sdkman-init.sh
 
 export SBT_OPTS="-Xmx1G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=1G -Xss2M  -Duser.timezone=GMT"
 export GOPATH=$HOME/go
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 
-function clean_docker(){
+alias la='ls -alh --git'
+alias ls='exa'
+
+# Nicer history
+export HISTSIZE=100000
+export HISTFILE="$HOME/.history"
+export SAVEHIST=$HISTSIZE
+
+# Use vim as the editor
+export EDITOR=vim
+
+functio clean_docker(){
   docker volume rm $(docker volume ls -qf dangling=true) || true;
   docker rmi $(docker images --filter "dangling=true" -q --no-trunc) || true;
   docker rmi $(docker images | grep "none" | awk '/ / { print $3 }') || true;
@@ -111,3 +123,6 @@ function clean_docker(){
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+
+export PATH="/usr/local/sbin:$PATH"

@@ -4,7 +4,7 @@ let mapleader = ","
 "
 imap jj <Esc>¬
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\.git$\|\.hg$\|\.svn$\|\.yardoc$|target$|build$|target-test$',
+  \ 'dir':  '\.git$\|\.hg$\|\.svn$\|\.yardoc$|target$|build$',
   \ 'file': '\.exe$\|\.so$\|\.dat$|\.jar$|\.class$|\.orig$'
   \ }
 
