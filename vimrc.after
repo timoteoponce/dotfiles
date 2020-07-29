@@ -3,12 +3,12 @@
 "colorscheme solarized
 "colorscheme jellybeans
 "colorscheme zenburn
-colorscheme molokai
+"colorscheme molokai
 "colorscheme wombat
 "colorscheme intellij
 "colorscheme base16-ashes
 "colorscheme railscasts
-"colorscheme darcula
+colorscheme darcula
 "colorscheme base16-atelierdune
 "colorscheme lucius
 "

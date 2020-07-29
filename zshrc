@@ -126,3 +126,8 @@ export NVM_DIR="$HOME/.nvm"
 
 
 export PATH="/usr/local/sbin:$PATH"
+# rbenv
+# # Customize to your needs...
+export PATH="$HOME/.rbenv/bin:/usr/local/bin:$HOME/.bin:$PATH"
+
+eval "$(rbenv init - zsh)"
