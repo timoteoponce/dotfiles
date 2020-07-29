@@ -2,7 +2,7 @@
 Required tools:
 
   -  Shell: ZSH with [http://ohmyz.sh/](http://ohmyz.sh/)
-  -  VIM: Janus [https://github.com/carlhuda/janus](https://github.com/carlhuda/janus)
+  -  VIM: Janus [https://github.com/carlhuda/janus](https://github.com/carlhuda/janus) or [https://github.com/amix/vimrc](https://github.com/amix/vimrc)
   -  RCM [https://github.com/thoughtbot/rcm](https://github.com/thoughtbot/rcm)
 
 ## Installation
