@@ -1,5 +1,5 @@
-"set background=light
 "set background=dark
+"set background=light
 "colorscheme solarized
 "colorscheme jellybeans
 "colorscheme zenburn
@@ -8,10 +8,12 @@
 "colorscheme intellij
 "colorscheme base16-ashes
 "colorscheme railscasts
-colorscheme darcula
+colorscheme railscasts2
+"colorscheme darcula
 "colorscheme base16-atelierdune
 "colorscheme lucius
 "
+
 let NERDTreeIgnore = ['\.js.map$' ,'\.pyc$' ,'\.orig$' ,'node_modules' ,'target','bower_components','dist', 'app/dist', 'app/bower_components']
 unlet g:ctrlp_custom_ignore
 "let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git|hg\|target\|build\bower_components\|dist\'
@@ -35,3 +37,9 @@ set mouse=n
 
 set wrap
 set linebreak
+
+" clipboard interaction
+"noremap <Leader>y "*y
+"noremap <Leader>p "*p
+"noremap <Leader>Y "+y
+"noremap <Leader>P "+p

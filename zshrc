@@ -112,13 +112,16 @@ export SAVEHIST=$HISTSIZE
 # Use vim as the editor
 export EDITOR=vim
 
-functio clean_docker(){
+function clean_docker(){
   docker volume rm $(docker volume ls -qf dangling=true) || true;
   docker rmi $(docker images --filter "dangling=true" -q --no-trunc) || true;
   docker rmi $(docker images | grep "none" | awk '/ / { print $3 }') || true;
   docker rm $(docker ps -qa --no-trunc --filter "status=exited") || true;
   docker volume rm $(docker volume ls -f 'dangling=true') || true;
 }
+# Utils
+function mkcd() { mkdir -p $1 && cd $1 }
+function cdf() { cd *$1*/ } # stolen from @topfunky
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -131,3 +134,6 @@ export PATH="/usr/local/sbin:$PATH"
 export PATH="$HOME/.rbenv/bin:/usr/local/bin:$HOME/.bin:$PATH"
 
 eval "$(rbenv init - zsh)"
+
+export PATH="/Users/username/.pyenv:$PATH"
+eval "$(pyenv init -)"
