@@ -102,7 +102,6 @@ export GOPATH=$HOME/go
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 
 alias la='ls -alh --git'
-alias ls='exa'
 
 # Nicer history
 export HISTSIZE=100000
