@@ -1,0 +1,19 @@
+Host deploy.screenfood.com
+  User root
+  Port 8022
+
+Host saas.screenfood.ch
+  User administrator
+
+Host timoteoponce.com
+  User root
+  HostName 157.245.143.20
+
+Host *
+  Compression yes
+  IdentityFile ~/.ssh/id_timoteo.ponce_ed25519
+  AddKeysToAgent yes
+  UseKeychain yes
+  ServerAliveInterval 120
+  LogLevel INFO
+  StrictHostKeyChecking ask

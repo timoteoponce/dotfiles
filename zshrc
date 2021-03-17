@@ -102,6 +102,7 @@ export GOPATH=$HOME/go
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 
 alias la='ls -alh --git'
+alias fsl='fossil'
 
 # Nicer history
 export HISTSIZE=100000
@@ -132,7 +133,7 @@ export PATH="/usr/local/sbin:$PATH"
 # # Customize to your needs...
 export PATH="$HOME/.rbenv/bin:/usr/local/bin:$HOME/.bin:$PATH"
 
-eval "$(rbenv init - zsh)"
+#eval "$(rbenv init - zsh)"
 
-export PATH="/Users/username/.pyenv:$PATH"
-eval "$(pyenv init -)"
+#export PATH="/Users/username/.pyenv:$PATH"
+#eval "$(pyenv init -)"

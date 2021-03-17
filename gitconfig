@@ -45,13 +45,14 @@
 	email = timo.slack@gmail.com
 
 [diff]
-  tool = diffmerge
+	tool = vimdiff
 
 [difftool "diffmerge"]
   cmd = /usr/local/bin/diffmerge \"$LOCAL\" \"$REMOTE\"
 
 [merge]
-  tool = diffmerge
+	tool = vimdiff
+	conflictstyle = diff3
 
 [mergetool "diffmerge"]
   cmd = "diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$(if test -f \"$BASE\"; then echo \"$BASE\"; else echo \"$LOCAL\"; fi)\" \"$REMOTE\""
@@ -78,3 +79,7 @@
 #    diffFilter = delta --color-only
 [pull]
 	rebase = false
+[init]
+	defaultBranch = main
+[mergetool]
+	prompt = true
