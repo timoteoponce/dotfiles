@@ -14,11 +14,11 @@ colorscheme railscasts2
 "colorscheme lucius
 "
 
-let NERDTreeIgnore = ['\.js.map$' ,'\.pyc$' ,'\.orig$' ,'node_modules' ,'target','bower_components','dist', 'app/dist', 'app/bower_components']
+let NERDTreeIgnore = ['\.js.map$' ,'\.pyc$' ,'\.orig$' ,'node_modules' ,'target','bower_components','app/bower_components', 'cache']
 unlet g:ctrlp_custom_ignore
 "let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git|hg\|target\|build\bower_components\|dist\'
 let g:ctrlp_custom_ignore = {
-      \ 'dir':  '\.git$\|\.hg$\|\.svn$\|bower_components$\|dist$\|node_modules$\|project_files$\|target$\|build$',
+      \ 'dir':  '\.git$\|\.hg$\|\.svn$\|bower_components$\|dist$\|node_modules$\|project_files$\|target$\|build$\|cache$',
       \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$\|.map$\|.tmp$\|.rej$\|.orig$\|.class$\|.jar$\|.js.map$'
       \ }
 

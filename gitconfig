@@ -27,6 +27,7 @@
   pullH = pull origin HEAD
   code-changes = "!git log --format=format: --name-only | egrep -v '^$' | sort | uniq -c | sort -rg | head -10"
   cc = "!git code-changes"
+  prune= "git remote prune origin && git fetch -p"
 
 [color]
   ui = auto
@@ -45,29 +46,23 @@
 	email = timo.slack@gmail.com
 
 [diff]
-	tool = vimdiff
+	tool = diffmerge
 
 [difftool "diffmerge"]
-  cmd = /usr/local/bin/diffmerge \"$LOCAL\" \"$REMOTE\"
+	cmd = diffmerge \"$LOCAL\" \"$REMOTE\"
 
 [merge]
-	tool = vimdiff
+	tool = diffmerge
 	conflictstyle = diff3
 
 [mergetool "diffmerge"]
-  cmd = "diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$(if test -f \"$BASE\"; then echo \"$BASE\"; else echo \"$LOCAL\"; fi)\" \"$REMOTE\""
-  trustExitCode = true
+	cmd = "diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$(if test -f \"$BASE\"; then echo \"$BASE\"; else echo \"$LOCAL\"; fi)\" \"$REMOTE\""
+	trustExitCode = true
 
 [webui]
   autoupdate = true
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path =
-[mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
 [credential]
-	helper = osxkeychain
+	helper = store
 #[pager]
 #    diff = diff-so-fancy | less --tabs=2 -RFX
 #    show = diff-so-fancy | less --tabs=2 -RFX
@@ -83,3 +78,8 @@
 	defaultBranch = main
 [mergetool]
 	prompt = true
+	keepBackup = false
+[difftool]
+	prompt = true
+[fetch]
+	prune = true

@@ -9,6 +9,14 @@ Host timoteoponce.com
   User root
   HostName 157.245.143.20
 
+Host tmp.timoteoponce.com
+  User timoteo
+  Hostname 46.101.179.164
+
+Host jumphost.upc
+  User tponce
+  HostName 62.2.20.20
+
 Host *
   Compression yes
   IdentityFile ~/.ssh/id_timoteo.ponce_ed25519
