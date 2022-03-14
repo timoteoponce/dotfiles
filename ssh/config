@@ -6,7 +6,7 @@ Host saas.screenfood.ch
   User administrator
 
 Host timoteoponce.com
-  User root
+  User timoteo
   HostName 157.245.143.20
 
 Host tmp.timoteoponce.com
@@ -19,7 +19,7 @@ Host jumphost.upc
 
 Host *
   Compression yes
-  IdentityFile ~/.ssh/id_timoteo.ponce_ed25519
+  IdentityFile ~/.ssh/id_ed25519
   AddKeysToAgent yes
   UseKeychain yes
   ServerAliveInterval 120

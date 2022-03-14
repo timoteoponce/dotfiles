@@ -8,25 +8,11 @@
   checkout = co
   lg = log -n 10 --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
   ls = ls-files --modified
-  addmod = !git ls-files --modified | xargs git add
-  addrm = !git ls-files --deleted | xargs git rm
-  #addrm = !git addmod & git addextra & git addrm
-  addextra = !git ls-files -o | xargs git add
-  webui = !/Users/timoteo/.git-webui/release/libexec/git-core/git-webui
   changes = ls-files --modified
   extra = ls-files --others
   cached = ls-files --cached
   staged = ls-files --stage
   missing = ls-files --deleted
-  # aliases that match the hg in / out commands
-  out      = !git fetch && git log FETCH_HEAD..
-  outgoing = !git fetch && git log FETCH_HEAD..
-  in       = !git fetch && git log ..FETCH_HEAD
-  incoming = !git fetch && git log ..FETCH_HEAD
-  pushH = push origin HEAD
-  pullH = pull origin HEAD
-  code-changes = "!git log --format=format: --name-only | egrep -v '^$' | sort | uniq -c | sort -rg | head -10"
-  cc = "!git code-changes"
   prune= "git remote prune origin && git fetch -p"
 
 [color]
@@ -38,48 +24,23 @@
 [core]
   pager = less -FXRS
   editor = vim
-	excludesfile = /Users/timoteo/.gitignore_global
-	autocrlf = input
+  excludesfile = /Users/timoteo/.gitignore_global
+  autocrlf = input
 
 [user]
   name = Timoteo Ponce
-	email = timo.slack@gmail.com
+  email = ponce.timoteo@gmail.com
 
-[diff]
-	tool = diffmerge
-
-[difftool "diffmerge"]
-	cmd = diffmerge \"$LOCAL\" \"$REMOTE\"
-
-[merge]
-	tool = diffmerge
-	conflictstyle = diff3
-
-[mergetool "diffmerge"]
-	cmd = "diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$(if test -f \"$BASE\"; then echo \"$BASE\"; else echo \"$LOCAL\"; fi)\" \"$REMOTE\""
-	trustExitCode = true
-
-[webui]
-  autoupdate = true
 [credential]
-	helper = store
-#[pager]
-#    diff = diff-so-fancy | less --tabs=2 -RFX
-#    show = diff-so-fancy | less --tabs=2 -RFX
-
-#[core]
-    #pager = delta --theme='ansi-dark'
-#    pager = delta 
-#[interactive]
-#    diffFilter = delta --color-only
+  helper = store
 [pull]
-	rebase = false
+  rebase = false
 [init]
-	defaultBranch = main
+  defaultBranch = main
 [mergetool]
-	prompt = true
-	keepBackup = false
+  prompt = true
+  keepBackup = false
 [difftool]
-	prompt = true
+  prompt = true
 [fetch]
-	prune = true
+  prune = true
