@@ -21,6 +21,7 @@ Host *
   Compression yes
   IdentityFile ~/.ssh/id_ed25519
   AddKeysToAgent yes
+  IgnoreUnknown UseKeychain
   UseKeychain yes
   ServerAliveInterval 120
   LogLevel INFO
