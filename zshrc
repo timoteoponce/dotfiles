@@ -1,3 +1,16 @@
+# manjaro specific settings
+
+# Use powerline
+USE_POWERLINE="true"
+# Source manjaro-zsh-configuration
+if [[ -e /usr/share/zsh/manjaro-zsh-config ]]; then
+  source /usr/share/zsh/manjaro-zsh-config
+fi
+# Use manjaro zsh prompt
+if [[ -e /usr/share/zsh/manjaro-zsh-prompt ]]; then
+  source /usr/share/zsh/manjaro-zsh-prompt
+fi
+
 # Set custom prompt
 autoload -Uz compinit promptinit
 compinit
@@ -53,7 +66,8 @@ alias ls='ls --color=auto'
 source ~/.sdkman/bin/sdkman-init.sh
 
 export SBT_OPTS="-Xmx1G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=1G -Xss2M  -Duser.timezone=GMT"
-export GOPATH=$HOME/go
+export GOROOT=$HOME/go
+export GOPATH=$HOME/projects/go
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 
 
@@ -83,3 +97,4 @@ export FZF_DEFAULT_COMMAND="rg --files --hidden --glob '!.git/**' --glob '!build
 
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
+
