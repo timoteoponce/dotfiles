@@ -63,12 +63,17 @@ alias fsl='fossil'
 alias ls='ls --color=auto'
 
 # others
-source ~/.sdkman/bin/sdkman-init.sh
+if [[ -e ~/.sdkman/bin/sdkman-init.sh ]]; then
+  source ~/.sdkman/bin/sdkman-init.sh
+fi
 
 export SBT_OPTS="-Xmx1G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=1G -Xss2M  -Duser.timezone=GMT"
-export GOROOT=$HOME/go
-export GOPATH=$HOME/projects/go
-export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+
+if [[ -d "$HOME/go" ]]; then
+  export GOROOT=$HOME/go
+  export GOPATH=$HOME/projects/go
+  export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+fi
 
 
 # Use vim as the editor
@@ -85,16 +90,21 @@ function clean_docker(){
 function mkcd() { mkdir -p $1 && cd $1 }
 function cdf() { cd *$1*/ } # stolen from @topfunky
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+if [[ -d "$HOME/.nvm" ]]; then
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+fi
 
-
-export PATH="$HOME/bin:$PATH"
+if [[ -d "$HOME/bin" ]]; then
+  export PATH="$HOME/bin:$PATH"
+fi
 # rbenv
 
 export FZF_DEFAULT_COMMAND="rg --files --hidden --glob '!.git/**' --glob '!build/**' --glob '!.dart_tool/**' --glob '!.idea' --glob '!node_modules'"
 
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
+if [[ -d "$HOME/.rbenv" ]]; then
+  export PATH="$HOME/.rbenv/bin:$PATH"
+  eval "$(rbenv init -)"
+fi
 
