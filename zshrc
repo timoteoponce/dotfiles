@@ -1,36 +1,42 @@
+export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 # manjaro specific settings
 
-# Use powerline
-USE_POWERLINE="true"
-# Source manjaro-zsh-configuration
-if [[ -e /usr/share/zsh/manjaro-zsh-config ]]; then
-  source /usr/share/zsh/manjaro-zsh-config
-fi
-# Use manjaro zsh prompt
-if [[ -e /usr/share/zsh/manjaro-zsh-prompt ]]; then
-  source /usr/share/zsh/manjaro-zsh-prompt
-fi
-
 # Set custom prompt
-autoload -Uz compinit promptinit
-compinit
+autoload -Uz compinit promptinit vcs_info colors
+compinit -D 
 promptinit
+colors
 
-# This will set the default prompt to the walters theme
-prompt fire
+# This will set the default prompt to the X theme, preview prompt themes with 'prompt -p'
+prompt suse
 
 setopt histignorealldups sharehistory
-
+zstyle ':vcs_info:*' enable git svn
 # Use emacs keybindings even if our EDITOR is set to vi
 bindkey -e
 
-# Initialize completion
-autoload -U compinit
-compinit -D
-# Use modern completion system
-autoload -Uz compinit
-compinit
+# add vcs_info to prompt
+zstyle ':vcs_info:*' enable git svn
+zstyle ':vcs_info:*' formats "%F{010}(%b)%f "
+precmd() { vcs_info }
+setopt prompt_subst
+PROMPT='%m:%n @ %F{green}%1d \$%f ${vcs_info_msg_0_}'
 
+## Options section
+setopt correct                                                  # Auto correct mistakes
+setopt extendedglob                                             # Extended globbing. Allows using regular expressions with *
+setopt nocaseglob                                               # Case insensitive globbing
+setopt rcexpandparam                                            # Array expension with parameters
+setopt nocheckjobs                                              # Don't warn about running processes when exiting
+setopt numericglobsort                                          # Sort filenames numerically when it makes sense
+setopt nobeep                                                   # No beep
+setopt appendhistory                                            # Immediately append history instead of overwriting
+setopt histignorealldups                                        # If a new command is a duplicate, remove the older one
+setopt autocd                                                   # if only directory path is entered, cd there.
+setopt inc_append_history                                       # save commands are added to the history immediately, otherwise only when shell exits.
+setopt histignorespace                                          # Don't save commands that start with space
+
+# Use modern completion system
 zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete _correct _approximate
 zstyle ':completion:*' format 'Completing %d'
@@ -49,6 +55,16 @@ zstyle ':completion:*' verbose true
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
+# Color man pages
+export LESS_TERMCAP_mb=$'\E[01;32m'
+export LESS_TERMCAP_md=$'\E[01;32m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;47;34m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;36m'
+export LESS=-R
+
 # Nicer history
 export HISTSIZE=100000
 export HISTFILE="$HOME/.history"
@@ -61,6 +77,9 @@ export WORDCHARS='*?[]~&;!$%^<>'
 alias la='ls -alh --git'
 alias fsl='fossil'
 alias ls='ls --color=auto'
+alias cp="cp -i"                                                # Confirm before overwriting something
+alias df='df -h'                                                # Human-readable sizes
+alias free='free -m'                                            # Show sizes in MB
 
 # others
 if [[ -e ~/.sdkman/bin/sdkman-init.sh ]]; then
@@ -107,4 +126,3 @@ if [[ -d "$HOME/.rbenv" ]]; then
   export PATH="$HOME/.rbenv/bin:$PATH"
   eval "$(rbenv init -)"
 fi
-

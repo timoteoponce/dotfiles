@@ -1,1 +1,7 @@
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
+
+# Added by Toolbox App
+export PATH="$PATH:/Users/timoteo/Library/Application Support/JetBrains/Toolbox/scripts"
+
+# Set PATH, MANPATH, etc., for Homebrew.
+eval "$(/opt/homebrew/bin/brew shellenv)"
