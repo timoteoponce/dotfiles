@@ -25,7 +25,7 @@
 [core]
   pager = less -FXRS
   editor = vim
-  excludesfile = /Users/timoteo/.gitignore_global
+	excludesFile = ~/.gitignore
   autocrlf = input
 
 [user]
@@ -33,7 +33,7 @@
   email = ponce.timoteo@gmail.com
 
 [credential]
-  helper = store
+	helper = /usr/local/share/gcm-core/git-credential-manager
 [pull]
   rebase = false
 [init]
@@ -46,9 +46,16 @@
 [fetch]
   prune = true
 [diff]
-  tool = vimdiff
+	tool = diffmerge
 [merge]
-  tool = vimdiff
+	tool = diffmerge
   conflictstyle = diff3
 [push]
 	autoSetupRemote = true
+[difftool "diffmerge"]
+	cmd = /usr/local/bin/diffmerge \"$LOCAL\" \"$REMOTE\"
+[mergetool "diffmerge"]
+	trustExitCode = true
+	cmd = /usr/local/bin/diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+[credential "https://dev.azure.com"]
+	useHttpPath = true
