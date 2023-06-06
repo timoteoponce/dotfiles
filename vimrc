@@ -5,13 +5,17 @@
 call plug#begin('~/.vim/plugged')
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }     " fzf integrationc
 Plug 'junegunn/fzf.vim'
-Plug 'preservim/nerdtree'
+"Plug 'preservim/nerdtree'
 "Plug 'vim-scripts/AutoComplPop'                         " Automatically show Vim's complete menu while typing.
 Plug 'othree/html5.vim'                                 " HTML 5 file type support
 Plug 'pangloss/vim-javascript'                          " js support
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'     " A bunch of useful language related snippets (ultisnips is the engine).
 Plug 'udalov/kotlin-vim'                                " kotlin language
 Plug 'tpope/vim-commentary'                             " better commenting
+Plug 'tpope/vim-vinegar'                                " netwr improvements
+Plug 'tpope/vim-fugitive'                                   " git
+Plug 'chrisbra/csv.vim'                                 " CSV
+Plug 'vim-airline/vim-airline'                          " status line
 " ================= looks and GUI stuff ================== "
 Plug 'luochen1990/rainbow'                              " rainbow parenthesis
 Plug 'hzchirs/vim-material'                             " material color themes
@@ -45,7 +49,7 @@ set showtabline=0                                       " always show tabline
 set grepprg=rg\ --vimgrep                               " use rg as default grepper
 
 " performance tweaks
-set re=1
+set re=0
 
 " Themeing
 let g:material_style = 'oceanic'
@@ -61,7 +65,11 @@ hi SpellBad guifg=NONE gui=bold,undercurl               " misspelled words
 " ======================== Plugin Configurations ======================== "{{{
 
 "" built in plugins
-let loaded_netrw = 0                                    " diable netew
+"let loaded_netrw = 0                                    " diable netew
+let g:netrw_keepdir = 0
+let g:netrw_winsize = 30
+nnoremap <C-t> :Lexplore %:p:h<CR>
+
 let g:omni_sql_no_default_maps = 1                      " disable sql omni completion
 let g:loaded_python_provider = 0
 let g:loaded_perl_provider = 0
@@ -155,38 +163,4 @@ let $FZF_DEFAULT_COMMAND = "rg --files --hidden --glob '!.git/**' --glob '!build
 
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-
-"
-" nerdtree
-"
-nnoremap <C-t> :NERDTreeToggle<CR>
-" Start NERDTree and put the cursor back in the other window.
-autocmd VimEnter * NERDTree | wincmd p
-
-" Start NERDTree when Vim is started without file arguments.
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
-
-" Start NERDTree. If a file is specified, move the cursor to its window.
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * NERDTree | if argc() > 0 || exists("s:std_in") | wincmd p | endif
-
-" Start NERDTree when Vim starts with a directory argument.
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists('s:std_in') | execute 'NERDTree' argv()[0] | wincmd p | enew | execute 'cd '.argv()[0] | endif
-
-" Exit Vim if NERDTree is the only window remaining in the only tab.
-autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-
-" Close the tab if NERDTree is the only window remaining in it.
-autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-
-" If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
-autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 | let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
-
-" prevent fzf replacing nerdtree
-au BufEnter * if bufname('#') =~ 'NERD_tree' && bufname('%') !~ 'NERD_tree' && winnr('$') > 1 | b# | exe "normal! \<c-w>\<c-w>" | :blast | endif
-
-" custom syntax for odd file extensions
-autocmd BufNewFile,BufRead *.svelte set syntax=html
 
