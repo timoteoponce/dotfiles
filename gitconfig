@@ -27,6 +27,7 @@
   editor = vim
 	excludesFile = ~/.gitignore
   autocrlf = input
+	quotepath = false
 
 [user]
   name = Timoteo Ponce
@@ -47,8 +48,10 @@
   prune = true
 [diff]
 	tool = diffmerge
+	; tool = vimdiff
 [merge]
 	tool = diffmerge
+	; tool = vimdiff
   conflictstyle = diff3
 [push]
 	autoSetupRemote = true
@@ -59,3 +62,7 @@
 	cmd = /usr/local/bin/diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
 [credential "https://dev.azure.com"]
 	useHttpPath = true
+[credential "http://localhost:3000"]
+	provider = generic
+[credential "https://git.timoteoponce.com"]
+	provider = generic

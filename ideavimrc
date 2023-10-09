@@ -1,0 +1,106 @@
+" .ideavimrc is a configuration file for IdeaVim plugin. It uses
+"   the same commands as the original .vimrc configuration.
+" You can find a list of commands here: https://jb.gg/h38q75
+" Find more examples here: https://jb.gg/share-ideavimrc
+
+" Define leader to space"
+let mapleader=","
+
+"" -- Suggested options --
+" Show a few lines of context around the cursor. Note that this makes the
+" text scroll if you mouse-click near the start or end of the window.
+set scrolloff
+
+" Do incremental searching.
+set incsearch ignorecase smartcase hlsearch             " highlight text while searching
+set expandtab smarttab                                  " tab key actions
+set list listchars=trail:»,tab:»-                       " use tab to navigate in list mode
+
+" Idea specific configuration -------
+set ideastatusicon=gray
+set number                                              " enable numbers on the left
+set showmode
+
+set backspace=indent,eol,start                          " sensible backspacing
+set cursorline cursorcolumn
+" Mappings
+
+" Open the debug window
+map <leader>xx <Action>(ChooseDebugConfiguration)
+map <leader>xs <Action>(Stop)
+map <leader>xr <Action>(ChooseRunConfiguration)
+map <leader>xe <Action>(editRunConfigurations)
+
+" Refactoring
+map <leader>rr <Action>(Refactorings.QuickListPopupAction)
+map <leader>F <Action>(ReformatCode)
+
+" Open file structure popup
+map <leader>l <Action>(FileStructurePopup)
+map <leader>X <Action>(CloseAllEditorsButActive)
+
+" Open the home row"
+map <leader>. <Action>(ShowNavBar)
+
+" Open recent file popup
+map <leader>b <Action>(RecentFiles)
+
+" View Modes"
+map <leader>vv <Action>(ToggleDistractionFreeMode)
+map <leader>vz <Action>(ToggleZenMode)
+map <leader>vc <Action>(ChangeScheme)
+
+" Open find in file"
+map <leader>f <Action>(GotoFile)
+map <leader>fi <Action>(FindInPath)
+map <leader>fc <Action>(GotoClass)
+map <leader>fs <Action>(GotoSymbol)
+map <leader>ft <Action>(GotoTest)
+map <leader>fa <Action>(GotoAction)
+map <leader>fr <Action>(RecentLocations)
+
+" VCS
+"map <leader>yy <Action>(Git.Branches)
+"map <leader>yl <Action>(Vcs.Show.Local.Changes)
+
+" Tool window"
+map <leader>h <Action>(HideAllWindows)
+map <leader>p <Action>(ActivateProjectToolWindow)
+map <leader>to <Action>(ActivateTODOToolWindow)
+
+" Debug helper"
+"map <leader>db <Action>(ToggleLineBreakpoint)
+"map <leader>dd <Action>(Resume)
+"map <leader>dn <Action>(StepOver)
+
+" Error handling"
+map <leader>ee <Action>(GotoNextError)
+map <leader>ep <Action>(GotoPreviousError)
+
+" Don't use Ex mode, use Q for formatting.
+map Q gq
+
+" --- Enable IdeaVim plugins https://jb.gg/ideavim-plugins
+
+" Highlight copied text
+Plug 'machakann/vim-highlightedyank'
+" Commentary plugin
+Plug 'tpope/vim-commentary'
+" Vim Paragraph Motion
+"Plug 'dbakker/vim-paragraph-motion'
+
+" Vim Easymotion"
+Plug 'easymotion/vim-easymotion'
+set easymotion
+map s <Plug>(easymotion-f)
+map S <Plug>(easymotion-s)
+
+"" -- Map IDE actions to IdeaVim -- https://jb.gg/abva4t
+"" Map \r to the Reformat Code action
+"map \r <Action>(ReformatCode)
+
+"" Map <leader>d to start debug
+"map <leader>d <Action>(Debug)
+
+"" Map \b to toggle the breakpoint on the current line
+"map \b <Action>(ToggleLineBreakpoint)

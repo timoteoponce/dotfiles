@@ -35,7 +35,6 @@ set encoding=utf-8                                      " text encoding
 set number                                              " enable numbers on the left
 set title                                               " tab title as file name
 set noshowmode                                          " dont show current mode below statusline
-set noshowcmd                                           " to get rid of display of last command
 set conceallevel=2                                      " set this so we wont break indentation plugin
 set splitright                                          " open vertical split to the right
 set splitbelow                                          " open horizontal split to the bottom
@@ -97,8 +96,6 @@ set nobackup
 set nowritebackup
 set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
 " display incomplete commands
 set showcmd
 " Enable highlighting for syntax
