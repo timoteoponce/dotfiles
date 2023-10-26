@@ -5,10 +5,13 @@ Host deploy.screenfood.com
 Host saas.screenfood.ch
   User administrator
 
+# Host timoteoponce.com
+#   User timoteo
+#   HostName 157.245.143.20
+#   Port 2202
 Host timoteoponce.com
   User timoteo
-  HostName 157.245.143.20
-  Port 2202
+  HostName 139.162.180.24
 
 Host tmp.timoteoponce.com
   User timoteo

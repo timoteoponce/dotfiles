@@ -9,7 +9,8 @@ Plug 'junegunn/fzf.vim'
 "Plug 'vim-scripts/AutoComplPop'                         " Automatically show Vim's complete menu while typing.
 Plug 'othree/html5.vim'                                 " HTML 5 file type support
 Plug 'pangloss/vim-javascript'                          " js support
-" Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'     " A bunch of useful language related snippets (ultisnips is the engine).
+Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'     " A bunch of useful language related snippets (ultisnips is the engine).
+Plug 'machakann/vim-highlightedyank'
 Plug 'udalov/kotlin-vim'                                " kotlin language
 Plug 'tpope/vim-commentary'                             " better commenting
 Plug 'tpope/vim-vinegar'                                " netwr improvements
