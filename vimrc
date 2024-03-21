@@ -1,4 +1,4 @@
-"
+:set guifont=Bitstream\ Vera\ Sans\ Mono:h14"
 " Plugins
 "
 " Specify a directory for plugins.
@@ -20,6 +20,7 @@ Plug 'vim-airline/vim-airline'                          " status line
 " ================= looks and GUI stuff ================== "
 Plug 'luochen1990/rainbow'                              " rainbow parenthesis
 Plug 'hzchirs/vim-material'                             " material color themes
+Plug 'joshdick/onedark.vim'                             " onedark color themes
 
 call plug#end()
 " ==================== general config ======================== "{{{
@@ -45,7 +46,7 @@ set backspace=indent,eol,start                          " sensible backspacing
 set undofile                                            " enable persistent undo
 set undodir=/tmp                                        " undo temp file directory
 set foldlevel=0                                         " open all folds by default
-set showtabline=0                                       " always show tabline
+set showtabline=2                                       " always show tabline
 set grepprg=rg\ --vimgrep                               " use rg as default grepper
 
 " performance tweaks
@@ -53,7 +54,11 @@ set re=0
 
 " Themeing
 let g:material_style = 'oceanic'
-colorscheme vim-material
+" macvim font
+set guifont=Menlo-Regular:h14
+" colorscheme vim-material
+"colorscheme evening
+colorscheme onedark
 hi Pmenu guibg='#00010a' guifg=white                    " popup menu colors
 hi Comment gui=italic cterm=italic                      " italic comments
 hi Search guibg=#b16286 guifg=#ebdbb2 gui=NONE          " search string highlight color
@@ -85,7 +90,6 @@ set cursorline cursorcolumn
 set cmdheight=1
 set switchbuf=useopen
 " Always show tab bar at the top
-set showtabline=2
 set winwidth=79
 " Prevent Vim from clobbering the scrollback buffer. See
 " http://www.shallowsky.com/linux/noaltscreen.html

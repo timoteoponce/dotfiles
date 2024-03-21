@@ -48,6 +48,7 @@
   prune = true
 [diff]
 	tool = diffmerge
+	algorithm = histogram
 	; tool = vimdiff
 [merge]
 	tool = diffmerge
@@ -66,3 +67,7 @@
 	provider = generic
 [credential "https://git.timoteoponce.com"]
 	provider = generic
+[gpg]
+	format = ssh
+[maintenance]
+	repo = /Users/timoteo/projects/confinale/aspark-demo-adapter

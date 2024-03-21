@@ -1,25 +1,10 @@
-Host deploy.screenfood.com
-  User root
-  Port 8022
-
-Host saas.screenfood.ch
-  User administrator
-
-# Host timoteoponce.com
-#   User timoteo
-#   HostName 157.245.143.20
-#   Port 2202
 Host timoteoponce.com
   User timoteo
   HostName 139.162.180.24
 
-Host tmp.timoteoponce.com
-  User timoteo
-  Hostname 46.101.179.164
-
-Host jumphost.upc
-  User tponce
-  HostName 62.2.20.20
+Host raspberrypi
+  User pi
+  Hostname 192.168.0.17
 
 Host *
   Compression yes
