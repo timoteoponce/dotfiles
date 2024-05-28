@@ -69,17 +69,26 @@ export LESS=-R
 export HISTSIZE=100000
 export HISTFILE="$HOME/.history"
 export SAVEHIST=$HISTSIZE
+# setup fzf for history
+source <(fzf --zsh)
 
 # By default, zsh considers many characters part of a word (e.g., _ and -).
 # Narrow that down to allow easier skipping through words via M-f and M-b.
 export WORDCHARS='*?[]~&;!$%^<>'
 
 alias la='ls -alh --git'
-alias fsl='fossil'
+alias f='fossil'
+alias fst='fossil stat'
 alias ls='ls --color=auto'
 alias cp="cp -i"                                                # Confirm before overwriting something
 alias df='df -h'                                                # Human-readable sizes
 alias free='free -m'                                            # Show sizes in MB
+alias n='neovim'
+alias g='git'
+alias gst='git status'
+alias gc='git commit'
+alias gcm='git commit -m'
+alias gau='git add -u'
 
 # others
 if [[ -e ~/.sdkman/bin/sdkman-init.sh ]]; then

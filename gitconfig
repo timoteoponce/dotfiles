@@ -65,8 +65,6 @@
 	useHttpPath = true
 [credential "http://localhost:3000"]
 	provider = generic
-[credential "https://git.timoteoponce.com"]
-	provider = generic
 [gpg]
 	format = ssh
 [maintenance]
