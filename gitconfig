@@ -61,11 +61,3 @@
 [mergetool "diffmerge"]
 	trustExitCode = true
 	cmd = /usr/local/bin/diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
-[credential "https://dev.azure.com"]
-	useHttpPath = true
-[credential "http://localhost:3000"]
-	provider = generic
-[gpg]
-	format = ssh
-[maintenance]
-	repo = /Users/timoteo/projects/confinale/aspark-demo-adapter

@@ -1,6 +1,3 @@
-export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
-# manjaro specific settings
-
 # Set custom prompt
 autoload -Uz compinit promptinit vcs_info colors
 compinit -D 
@@ -42,7 +39,6 @@ zstyle ':completion:*' completer _expand _complete _correct _approximate
 zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' menu select=2
-eval "$(dircolors -b)"
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
@@ -73,35 +69,6 @@ export SAVEHIST=$HISTSIZE
 # By default, zsh considers many characters part of a word (e.g., _ and -).
 # Narrow that down to allow easier skipping through words via M-f and M-b.
 export WORDCHARS='*?[]~&;!$%^<>'
-
-alias la='ls -alh --git'
-alias f='fossil'
-alias fst='fossil stat'
-alias ls='ls --color=auto'
-alias cp="cp -i"                                                # Confirm before overwriting something
-alias df='df -h'                                                # Human-readable sizes
-alias free='free -m'                                            # Show sizes in MB
-alias n='nvim'
-alias g='git'
-alias gst='git status'
-alias gc='git commit'
-alias gcm='git commit -m'
-alias gau='git add -u'
-
-# others
-if [[ -e ~/.sdkman/bin/sdkman-init.sh ]]; then
-  source ~/.sdkman/bin/sdkman-init.sh
-fi
-
-export SBT_OPTS="-Xmx1G -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=1G -Xss2M  -Duser.timezone=GMT"
-
-if [[ -d "$HOME/go" ]]; then
-  export GOROOT=$HOME/go
-  export GOPATH=$HOME/projects/go
-  export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
-fi
-
-
 # Use vim as the editor
 export EDITOR=vim
 
@@ -112,33 +79,12 @@ function clean_docker(){
   docker rm $(docker ps -qa --no-trunc --filter "status=exited") || true;
   docker volume rm $(docker volume ls -f 'dangling=true') || true;
 }
-# Utils
-function mkcd() { mkdir -p $1 && cd $1 }
-function cdf() { cd *$1*/ } # stolen from @topfunky
-
-if [[ -d "$HOME/.nvm" ]]; then
-  export NVM_DIR="$HOME/.nvm"
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-fi
 
 if [[ -d "$HOME/bin" ]]; then
   export PATH="$HOME/bin:$PATH"
 fi
 # rbenv
-
 export FZF_DEFAULT_COMMAND="rg --files --hidden --glob '!.git/**' --glob '!build/**' --glob '!.dart_tool/**' --glob '!.idea' --glob '!node_modules'"
-
-if [[ -d "$HOME/.rbenv" ]]; then
-  export PATH="$HOME/.rbenv/bin:$PATH"
-  eval "$(rbenv init - zsh)"
-fi
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/timoteo/projects/mine/lfs_kubernetes/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/timoteo/projects/mine/lfs_kubernetes/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/timoteo/projects/mine/lfs_kubernetes/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/timoteo/projects/mine/lfs_kubernetes/google-cloud-sdk/completion.zsh.inc'; fi
 
 # zsh plugins
 # zplug - manage plugins
