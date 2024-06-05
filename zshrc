@@ -83,27 +83,8 @@ function clean_docker(){
 if [[ -d "$HOME/bin" ]]; then
   export PATH="$HOME/bin:$PATH"
 fi
-# rbenv
+
 export FZF_DEFAULT_COMMAND="rg --files --hidden --glob '!.git/**' --glob '!build/**' --glob '!.dart_tool/**' --glob '!.idea' --glob '!node_modules'"
 
-# zsh plugins
-# zplug - manage plugins
-source $HOMEBREW_PREFIX/opt/zplug/init.zsh
-# zplug "plugins/git", from:oh-my-zsh
-# zplug "plugins/sudo", from:oh-my-zsh
-# zplug "plugins/command-not-found", from:oh-my-zsh
-zplug "zsh-users/zsh-syntax-highlighting"
-zplug "zsh-users/zsh-autosuggestions"
-zplug "zsh-users/zsh-history-substring-search"
-zplug "zsh-users/zsh-completions"
-zplug "junegunn/fzf"
-# zplug "themes/robbyrussell", from:oh-my-zsh, as:theme   # Theme
-
-# zplug - install/load new plugins when zsh is started or reloaded
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    fi
-fi
-zplug load --verbose
+# useful alias
+alias ls="ls --color=auto"
