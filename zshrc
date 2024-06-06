@@ -71,7 +71,9 @@ export SAVEHIST=$HISTSIZE
 export WORDCHARS='*?[]~&;!$%^<>'
 # Use vim as the editor
 export EDITOR=vim
-
+#
+# Useful functions
+#
 function clean_docker(){
   docker volume rm $(docker volume ls -qf dangling=true) || true;
   docker rmi $(docker images --filter "dangling=true" -q --no-trunc) || true;
@@ -80,11 +82,74 @@ function clean_docker(){
   docker volume rm $(docker volume ls -f 'dangling=true') || true;
 }
 
+# Compression
+compress() { tar -czf "${1%/}.tar.gz" "${1%/}"; }
+alias decompress="tar -xzf"
+#
 if [[ -d "$HOME/bin" ]]; then
   export PATH="$HOME/bin:$PATH"
 fi
 
 export FZF_DEFAULT_COMMAND="rg --files --hidden --glob '!.git/**' --glob '!build/**' --glob '!.dart_tool/**' --glob '!.idea' --glob '!node_modules'"
-
-# useful alias
+#
+# useful aliases
+#
 alias ls="ls --color=auto"
+# File system
+alias ls='eza -lh --group-directories-first --icons'
+alias lsa='ls -a'
+alias lt='eza --tree --level=2 --long --icons --git'
+alias lta='lt -a'
+alias ff="fzf --preview 'bat --style=numbers --color=always {}'"
+# Directories
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+#
+# zsh plugins
+#
+# Check if zplug is installed
+if [[ ! -d ~/.zplug_repo ]]; then
+  echo "zplug not found, cloning repository" \
+    && git clone https://github.com/zplug/zplug ~/.zplug_repo \
+    && source ~/.zplug_repo/init.zsh && zplug update --self
+fi
+# Essential loading of init.zsh 
+source ~/.zplug_repo/init.zsh
+# 
+zplug "plugins/git", from:oh-my-zsh
+# zplug "plugins/sudo", from:oh-my-zsh
+# zplug "plugins/command-not-found", from:oh-my-zsh
+# Make sure to use double quotes to prevent shell expansion
+zplug "zsh-users/zsh-syntax-highlighting"
+zplug "zsh-users/zsh-autosuggestions"
+zplug "zsh-users/zsh-history-substring-search"
+zplug "zsh-users/zsh-completions"
+# zplug "themes/robbyrussell", from:oh-my-zsh, as:theme   # Theme
+# Load theme file
+#zplug 'dracula/zsh', as:theme
+
+# zplug - install/load new plugins when zsh is started or reloaded
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
+fi
+zplug load 
+
+# 
+# setup zellij
+#
+if [[ -z "$ZELLIJ" ]]; then
+  if [[ "$ZELLIJ_AUTO_ATTACH" == "true" ]]; then
+    zellij attach -c
+  else
+    zellij
+  fi
+
+  if [[ "$ZELLIJ_AUTO_EXIT" == "true" ]]; then
+    exit
+  fi
+fi
+
