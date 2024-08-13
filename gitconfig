@@ -32,9 +32,6 @@
 [user]
   name = Timoteo Ponce
   email = ponce.timoteo@gmail.com
-
-[credential]
-	helper = /usr/local/share/gcm-core/git-credential-manager
 [pull]
   rebase = false
 [init]
@@ -61,3 +58,8 @@
 [mergetool "diffmerge"]
 	trustExitCode = true
 	cmd = /usr/local/bin/diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+[credential]
+	helper = 
+	helper = /usr/local/share/gcm-core/git-credential-manager
+[credential "https://dev.azure.com"]
+	useHttpPath = true

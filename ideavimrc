@@ -10,7 +10,8 @@ let mapleader=","
 " Show a few lines of context around the cursor. Note that this makes the
 " text scroll if you mouse-click near the start or end of the window.
 set scrolloff
-
+" Enable relative line numbers
+set relativenumber
 " Do incremental searching.
 set incsearch ignorecase smartcase hlsearch             " highlight text while searching
 set expandtab smarttab                                  " tab key actions
@@ -51,7 +52,7 @@ map <leader>vz <Action>(ToggleZenMode)
 map <leader>vc <Action>(ChangeScheme)
 
 " Open find in file"
-map <leader>f <Action>(GotoFile)
+map <leader>ff <Action>(GotoFile)
 map <leader>fi <Action>(FindInPath)
 map <leader>fc <Action>(GotoClass)
 map <leader>fs <Action>(GotoSymbol)

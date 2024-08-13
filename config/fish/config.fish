@@ -24,4 +24,4 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # mise
 mise activate fish | source
 
-tmux new-session
+#tmux new-session -A -s mySession
