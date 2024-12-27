@@ -24,10 +24,14 @@
 
 [core]
   pager = less -FXRS
+  ; pager = delta
   editor = vim
 	excludesFile = ~/.gitignore
   autocrlf = input
 	quotepath = false
+
+[interactive]
+  diffFilter = delta --color-only
 
 [user]
   name = Timoteo Ponce
@@ -45,7 +49,7 @@
   prune = true
 [diff]
 	tool = diffmerge
-	algorithm = histogram
+	; algorithm = histogram
 	; tool = vimdiff
 [merge]
 	tool = diffmerge
