@@ -1,8 +1,6 @@
 # Dot files
 Required tools:
 
-  - RCM [https://github.com/thoughtbot/rcm](https://github.com/thoughtbot/rcm)
-  - `mise`, `fish`, `fzf`, `ripgrep`, `eza` and `bat` packages
   - Install nerd-fonts
 
 ## Installation
