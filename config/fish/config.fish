@@ -18,6 +18,9 @@ alias ff="fzf --preview 'bat --style=numbers --color=always {}'"
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
+alias n='nvim'
+alias lzg='lazygit'
+alias lzd='lazydocker'
 #
 # homebrew
 eval "$(/opt/homebrew/bin/brew shellenv)"
