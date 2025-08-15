@@ -11,7 +11,7 @@ let mapleader=","
 " text scroll if you mouse-click near the start or end of the window.
 set scrolloff
 " Enable relative line numbers
-set relativenumber
+" set relativenumber
 " Do incremental searching.
 set incsearch ignorecase smartcase hlsearch             " highlight text while searching
 set expandtab smarttab                                  " tab key actions
@@ -87,6 +87,7 @@ map Q gq
 Plug 'machakann/vim-highlightedyank'
 " Commentary plugin
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-sensible'
 " Vim Paragraph Motion
 "Plug 'dbakker/vim-paragraph-motion'
 
