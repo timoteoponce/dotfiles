@@ -2,7 +2,8 @@ if status is-interactive
     # Commands to run in interactive sessions can go here
 end
 
-set -Ux EDITOR vim
+set EDITOR nvim
+set -Ux EDITOR nvim
 
 #
 # useful aliases
@@ -21,6 +22,7 @@ alias ....='cd ../../..'
 alias n='nvim'
 alias lzg='lazygit'
 alias lzd='lazydocker'
+alias e="$EDITOR"
 #
 # homebrew
 eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -28,3 +30,5 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 mise activate fish | source
 
 #tmux new-session -A -s mySession
+# try tool from tobi
+eval "$(~/.local/try.rb init ~/src/tries | string collect)"
