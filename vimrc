@@ -54,10 +54,10 @@ set re=0
 " Themeing
 let g:material_style = 'oceanic'
 " macvim font
-" set guifont=Menlo-Regular:h14
-" colorscheme vim-material
+set guifont=Menlo-Regular:h14
+colorscheme vim-material
 "colorscheme evening
-colorscheme onedark
+" colorscheme onedark
 hi Pmenu guibg='#00010a' guifg=white                    " popup menu colors
 hi Comment gui=italic cterm=italic                      " italic comments
 hi Search guibg=#b16286 guifg=#ebdbb2 gui=NONE          " search string highlight color

@@ -45,10 +45,10 @@
   keepBackup = false
 [difftool]
   prompt = true
-; [fetch]
-	; prune = true
-	; pruneTags = true
-	; all = true
+[fetch]
+	prune = true
+	pruneTags = true
+	all = true
 [diff]
 	tool = neovim
 	algorithm = histogram
