@@ -21,7 +21,7 @@ Automated dotfiles management using [rcm](https://github.com/thoughtbot/rcm).
 ```bash
 git clone https://github.com/yourusername/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-./install.sh
+bash install.sh
 ```
 
 On first launch of `nvim`, LazyVim will automatically install all plugins.
@@ -37,7 +37,7 @@ On first launch of `nvim`, LazyVim will automatically install all plugins.
    - `fzf`, `ripgrep`, `eza`, `bat` - CLI utilities
    - `lazygit`, `lazydocker` - TUI tools
    - `neovim` - text editor
-   - `diffmerge` (macOS) / `meld` (Linux) - diff tool
+   - `diffmerge` (macOS) / `vimdiff` (Linux) - diff tool
    - JetBrains Mono Nerd Font
 4. **Links dotfiles** via `rcup`
 5. **Installs LazyVim** (prompts for backup of existing config)

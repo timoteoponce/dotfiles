@@ -25,10 +25,13 @@ alias lzd='lazydocker'
 alias e="$EDITOR"
 #
 # homebrew
-eval "$(/opt/homebrew/bin/brew shellenv)"
+if test -x /opt/homebrew/bin/brew
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+else if test -x /home/linuxbrew/.linuxbrew/bin/brew
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+end
 # mise
 mise activate fish | source
 
-#tmux new-session -A -s mySession
-# try tool from tobi
-eval "$(~/.local/try.rb init ~/src/tries | string collect)"
+# try - experiment directories
+try init fish | source

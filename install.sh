@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 set -e
 
 DOTFILES_DIR="$HOME/.dotfiles"
@@ -17,25 +17,31 @@ install_homebrew() {
     return
   fi
   echo "Installing Homebrew..."
-  /bin/sh -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+}
+
+setup_brew_env() {
+  os="$(detect_os)"
+  if [ "$os" = "macos" ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  elif [ "$os" = "linux" ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  fi
 }
 
 install_packages() {
+  setup_brew_env
+
   echo "Installing packages via Homebrew..."
 
   brew install rcm
   brew install fish
+  brew install ruby
   brew install mise fzf ripgrep eza bat lazygit lazydocker
   brew install neovim
+  brew tap tobi/try https://github.com/tobi/try
+  brew install try
 
-  os="$(detect_os)"
-  if [ "$os" = "macos" ]; then
-    brew install diffmerge
-  else
-    brew install meld
-  fi
-
-  brew tap homebrew/cask-fonts
   brew install --cask font-jetbrains-mono-nerd-font 2>/dev/null || echo "Nerd font installation skipped (may fail on some distros)"
 }
 
@@ -108,6 +114,7 @@ main() {
   fi
 
   install_homebrew
+  setup_brew_env
   install_packages
   link_dotfiles
   install_lazyvim

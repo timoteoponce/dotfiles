@@ -50,26 +50,21 @@
 	pruneTags = true
 	all = true
 [diff]
-	tool = diffmerge
+	tool = vimdiff
 	algorithm = histogram
 	colorMoved = plain
 	mnemonicPrefix = true
 	renames = true
 	; algorithm = histogram
-	; tool = vimdiff
+	; tool = diffmerge
 [merge]
-	tool = diffmerge
-	; tool = vimdiff
+	tool = vimdiff
+	; tool = diffmerge
 	conflictstyle = zdiff3
 [push]
 	autoSetupRemote = true
 	default = simple
 	followTags = true
-[difftool "diffmerge"]
-	cmd = /usr/local/bin/diffmerge \"$LOCAL\" \"$REMOTE\"
-[mergetool "diffmerge"]
-	trustExitCode = true
-	cmd = /usr/local/bin/diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
 [credential]
 	helper = 
 	helper = /usr/local/share/gcm-core/git-credential-manager
