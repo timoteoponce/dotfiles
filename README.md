@@ -9,13 +9,12 @@ Automated dotfiles management using [rcm](https://github.com/thoughtbot/rcm).
 
 ## What's Included
 
-- **vimrc** - Vim configuration with plugins (fzf, vim-airline, etc.)
 - **gitconfig** - Git aliases and configuration
 - **tmux.conf** - Tmux settings
 - **ideavimrc** - IdeaVim configuration
 - **psqlrc** - PostgreSQL client configuration
 - **config/fish/** - Fish shell configuration
-- **config/nvim/** - Neovim configuration (sourced from vimrc)
+- **LazyVim** - Neovim distribution (installed to `~/.config/nvim`)
 
 ## Quick Install
 
@@ -24,6 +23,8 @@ git clone https://github.com/yourusername/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ./install.sh
 ```
+
+On first launch of `nvim`, LazyVim will automatically install all plugins.
 
 ## What the Installer Does
 
@@ -39,7 +40,7 @@ cd ~/.dotfiles
    - `diffmerge` (macOS) / `meld` (Linux) - diff tool
    - JetBrains Mono Nerd Font
 4. **Links dotfiles** via `rcup`
-5. **Installs vim plugins** via `:PlugInstall`
+5. **Installs LazyVim** (prompts for backup of existing config)
 6. **Prompts to change shell** to fish
 
 ## Manual Installation
@@ -56,17 +57,20 @@ brew install rcm fish mise fzf ripgrep eza bat lazygit lazydocker neovim
 # Link dotfiles
 rcup
 
-# Install vim plugins
-vim +PlugInstall +qall
+# Install LazyVim
+git clone https://github.com/LazyVim/starter ~/.config/nvim
+rm -rf ~/.config/nvim/.git
 
-# Change shell
-chsh -s $(which fish)
+# Start neovim to auto-install plugins
+nvim
 ```
 
-## Manual Plugin Installation
+## LazyVim Configuration
 
-If you only need to install vim plugins:
+LazyVim configuration is located in `~/.config/nvim/`. Key files:
 
-```bash
-vim +PlugInstall +qall
-```
+- `init.lua` - entry point
+- `lua/plugins/` - plugin configuration
+- `lua/config/` - user configuration
+
+After installation, refer to [LazyVim docs](https://lazyvim.org) for customization.

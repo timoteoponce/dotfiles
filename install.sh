@@ -44,9 +44,29 @@ link_dotfiles() {
   rcup -v
 }
 
-install_vim_plugins() {
-  echo "Installing vim plugins..."
-  vim +PlugInstall +qall
+install_lazyvim() {
+  echo "Installing LazyVim..."
+  nvim_config_dir="$HOME/.config/nvim"
+
+  if [ -d "$nvim_config_dir" ]; then
+    printf "Backup existing nvim config? [y/N] "
+    read -r reply
+    case "$reply" in
+      [Yy]*) 
+        mv "$nvim_config_dir" "${nvim_config_dir}.bak"
+        echo "Backed up to ${nvim_config_dir}.bak"
+        ;;
+      *) 
+        echo "Skipping LazyVim installation"
+        return
+        ;;
+    esac
+  fi
+
+  git clone https://github.com/LazyVim/starter "$nvim_config_dir"
+  rm -rf "$nvim_config_dir/.git"
+
+  echo "LazyVim installed. Run 'nvim' to install plugins."
 }
 
 change_shell() {
@@ -90,7 +110,7 @@ main() {
   install_homebrew
   install_packages
   link_dotfiles
-  install_vim_plugins
+  install_lazyvim
   change_shell
 
   echo "Installation complete! Restart your terminal."
