@@ -42,7 +42,7 @@
 	defaultBranch = main
 [mergetool]
   prompt = true
-  keepBackup = false
+	keepBackup = false
 [difftool]
   prompt = true
 [fetch]
@@ -58,7 +58,7 @@
 	; algorithm = histogram
 	; tool = diffmerge
 [merge]
-	tool = vimdiff
+	tool = lazygit
 	; tool = diffmerge
 	conflictstyle = zdiff3
 [push]
@@ -79,3 +79,14 @@
 [help]
 	autocorrect = prompt
 
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+
+
+[mergetool "lazygit"]
+	cmd = lazygit -f \"$MERGED\"
+	trustExitCode = true
