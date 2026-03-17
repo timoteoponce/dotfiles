@@ -35,7 +35,6 @@
 
 [user]
   name = Timoteo Ponce
-  email = ponce.timoteo@gmail.com
 [pull]
   rebase = false
 [init]
