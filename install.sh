@@ -39,6 +39,11 @@ install_packages() {
   brew install ruby
   brew install mise fzf ripgrep eza bat lazygit lazydocker
   brew install neovim
+
+  # Install xclip on Linux for LazyVim clipboard support
+  if [ "$(detect_os)" = "linux" ]; then
+    brew install xclip
+  fi
   brew tap tobi/try https://github.com/tobi/try
   brew install try
 
