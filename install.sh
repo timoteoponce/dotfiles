@@ -5,9 +5,9 @@ DOTFILES_DIR="$HOME/.dotfiles"
 
 detect_os() {
   case "$OSTYPE" in
-    darwin*) echo "macos" ;;
-    linux-*) echo "linux" ;;
-    *) echo "unsupported" ;;
+  darwin*) echo "macos" ;;
+  linux-*) echo "linux" ;;
+  *) echo "unsupported" ;;
   esac
 }
 
@@ -44,8 +44,6 @@ install_packages() {
   if [ "$(detect_os)" = "linux" ]; then
     brew install xclip
   fi
-  brew tap tobi/try https://github.com/tobi/try
-  brew install try
 
   brew install --cask font-jetbrains-mono-nerd-font 2>/dev/null || echo "Nerd font installation skipped (may fail on some distros)"
 }
@@ -63,14 +61,14 @@ install_lazyvim() {
     printf "Backup existing nvim config? [y/N] "
     read -r reply
     case "$reply" in
-      [Yy]*) 
-        mv "$nvim_config_dir" "${nvim_config_dir}.bak"
-        echo "Backed up to ${nvim_config_dir}.bak"
-        ;;
-      *) 
-        echo "Skipping LazyVim installation"
-        return
-        ;;
+    [Yy]*)
+      mv "$nvim_config_dir" "${nvim_config_dir}.bak"
+      echo "Backed up to ${nvim_config_dir}.bak"
+      ;;
+    *)
+      echo "Skipping LazyVim installation"
+      return
+      ;;
     esac
   fi
 
@@ -86,9 +84,11 @@ change_shell() {
   read -r reply
   echo
   case "$reply" in
-    [Yy]*) ;;
-    *) echo "Skipping shell change"
-       return ;;
+  [Yy]*) ;;
+  *)
+    echo "Skipping shell change"
+    return
+    ;;
   esac
 
   fish_path=$(command -v fish)

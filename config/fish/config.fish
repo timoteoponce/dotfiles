@@ -1,7 +1,3 @@
-if status is-interactive
-    fish_add_path -U ~/.opencode/bin
-end
-
 set EDITOR nvim
 set -Ux EDITOR nvim
 
@@ -32,6 +28,3 @@ else if test -x /home/linuxbrew/.linuxbrew/bin/brew
 end
 # mise
 mise activate fish | source
-
-# try - experiment directories
-try init fish | source

@@ -30,9 +30,6 @@
   autocrlf = input
 	quotepath = false
 
-[interactive]
-  diffFilter = delta --color-only
-
 [user]
   name = Timoteo Ponce
 [pull]
@@ -42,33 +39,33 @@
 [mergetool]
   prompt = true
 	keepBackup = false
+
+[merge]
+  tool = nvim-merge
+
+[mergetool "nvim-merge"]
+  cmd = nvim -d $LOCAL $MERGED $REMOTE -c '$wincmd w' -c 'wincmd J'
+  trustExitCode = true
+
 [difftool]
   prompt = true
+
+[difftool "nvimdiff"]
+  cmd = nvim -d $LOCAL $REMOTE
 [fetch]
 	prune = true
 	pruneTags = true
 	all = true
 [diff]
-	tool = vimdiff
+	tool = nvimdiff
 	algorithm = histogram
 	colorMoved = plain
 	mnemonicPrefix = true
 	renames = true
-	; algorithm = histogram
-	; tool = diffmerge
-[merge]
-	tool = lazygit
-	; tool = diffmerge
-	conflictstyle = zdiff3
 [push]
 	autoSetupRemote = true
 	default = simple
 	followTags = true
-[credential]
-	helper = 
-	helper = /usr/local/share/gcm-core/git-credential-manager
-[credential "https://dev.azure.com"]
-	useHttpPath = true
 [column]
 	ui = auto
 [branch]
@@ -78,14 +75,11 @@
 [help]
 	autocorrect = prompt
 
+
 [credential "https://github.com"]
 	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
+	helper = !which gh >/dev/null 2>&1 && exec gh auth git-credential
 [credential "https://gist.github.com"]
 	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
+	helper = !which gh >/dev/null 2>&1 && exec gh auth git-credential
 
-
-[mergetool "lazygit"]
-	cmd = lazygit -f \"$MERGED\"
-	trustExitCode = true
