@@ -1,76 +1,63 @@
 # Dotfiles
 
-Automated dotfiles management using [rcm](https://github.com/thoughtbot/rcm).
-
-## Requirements
-
-- macOS or Linux
-- Internet connection (for Homebrew and package installation)
-
-## What's Included
-
-- **gitconfig** - Git aliases and configuration
-- **tmux.conf** - Tmux settings
-- **ideavimrc** - IdeaVim configuration
-- **psqlrc** - PostgreSQL client configuration
-- **config/fish/** - Fish shell configuration
-- **LazyVim** - Neovim distribution (installed to `~/.config/nvim`)
-
-## Quick Install
+Personal macOS (+ light Linux) setup. Small on purpose.
 
 ```bash
-git clone https://github.com/yourusername/dotfiles.git ~/.dotfiles
+git clone https://github.com/timoteoponce/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ./install.sh
 ```
 
-On first launch of `nvim`, LazyVim will automatically install all plugins.
+## Two package layers
 
-## What the Installer Does
+| Layer | File | What goes here |
+|-------|------|----------------|
+| **Bootstrap** | `Brewfile` | The shell, GUI casks, fonts — things Homebrew is uniquely good at. Small and stable. |
+| **Tools + runtimes** | `mise.toml` → `~/.config/mise/config.toml` | Pinned standalone CLIs (ripgrep, fzf, bat, eza, delta, zoxide, lazygit, lazydocker, neovim) and language runtimes. Cross-platform, version-pinned. |
 
-1. **Detects OS** (macOS or Linux)
-2. **Installs Homebrew** (if not already installed)
-3. **Installs packages** via Homebrew:
-   - `rcm` - dotfiles manager
-   - `fish` - shell
-   - `mise` - version manager
-   - `fzf`, `ripgrep`, `eza`, `bat` - CLI utilities
-   - `lazygit`, `lazydocker` - TUI tools
-   - `neovim` - text editor
-   - `diffmerge` (macOS) / `meld` (Linux) - diff tool
-   - JetBrains Mono Nerd Font
-4. **Links dotfiles** via `rcup`
-5. **Installs LazyVim** (prompts for backup of existing config)
-6. **Prompts to change shell** to fish
+Update everything: `brew bundle && mise upgrade`.
 
-## Manual Installation
+## What's linked
 
-If you prefer to install manually:
+`install.sh` symlinks individual files (never whole directories, so tool-managed
+files like `fish_variables` stay local):
 
-```bash
-# Install Homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+| Repo | Target |
+|------|--------|
+| `gitconfig` / `gitignore` | `~/.gitconfig` / `~/.gitignore` |
+| `tmux.conf`, `ideavimrc`, `psqlrc` | `~/.tmux.conf`, `~/.ideavimrc`, `~/.psqlrc` |
+| `config/fish/{config.fish,conf.d/*,functions/*}` | `~/.config/fish/…` |
+| `config/ghostty/config` | `~/.config/ghostty/config` |
+| `config/lazygit/config.yml` | `~/.config/lazygit/config.yml` |
+| `config/lazydocker/config.yml` | `~/.config/lazydocker/config.yml` |
+| `config/bat/config` | `~/.config/bat/config` |
+| `mise.toml` | `~/.config/mise/config.toml` |
 
-# Install packages
-brew install rcm fish mise fzf ripgrep eza bat lazygit lazydocker neovim
+Existing real files are backed up to `*.bak.<timestamp>` before linking.
 
-# Link dotfiles
-rcup
+## Machine-specific bits (not tracked)
 
-# Install LazyVim
-git clone https://github.com/LazyVim/starter ~/.config/nvim
-rm -rf ~/.config/nvim/.git
+The installer creates these empty; put anything host- or work-specific in them:
 
-# Start neovim to auto-install plugins
-nvim
-```
+- `~/.gitconfig.local` — corp hosts, credential managers (`git-credential-manager`, etc.)
+- `~/.config/fish/local.fish` — extra `PATH`, installer snippets (grok, opencode…), work aliases
 
-## LazyVim Configuration
+## fish
 
-LazyVim configuration is located in `~/.config/nvim/`. Key files:
+- `conf.d/00-path.fish` — PATH
+- `conf.d/10-tools.fish` — brew · mise · zoxide · fzf key bindings
+- `conf.d/aliases.fish` — `ls`/`eza`, `cat`/`bat`, `ff`, editor shortcuts
+- `conf.d/abbr.fish` — inline-expanding `g*` / `d*` git & docker abbreviations
+- `functions/dsh.fish` — fzf-pick a running container and shell into it
+- `functions/mkcd.fish` — `mkdir -p` + `cd`
 
-- `init.lua` - entry point
-- `lua/plugins/` - plugin configuration
-- `lua/config/` - user configuration
+## git
 
-After installation, refer to [LazyVim docs](https://lazyvim.org) for customization.
+`delta` is the pager and diff/interactive filter (side-by-side, line numbers,
+navigate with `n`/`N`). Merge tool is `nvimdiff`. `rerere`, rebase autosquash +
+autostash on. GitHub auth via `gh`.
+
+## Neovim
+
+LazyVim lives in `~/.config/nvim` and is **not** managed by this repo — clone it
+once (the installer does, if absent) and manage it on its own.

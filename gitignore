@@ -1,0 +1,27 @@
+# Global gitignore (git core.excludesFile -> ~/.gitignore)
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+
+# Editors / IDEs
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+.nvim.lua
+.exrc
+
+# Tooling
+.direnv/
+.env
+.env.local
+node_modules/
+__pycache__/
+*.log
+
+# Claude
+.claude/settings.local.json

@@ -1,34 +1,13 @@
-if status is-interactive
-    # Commands to run in interactive sessions can go here
+# Entry point. Keep this tiny — real config lives in conf.d/*.fish, which fish
+# sources automatically (in filename order) before this file.
+
+if not status is-interactive
+    exit
 end
 
-set EDITOR nvim
-set -Ux EDITOR nvim
+set -gx EDITOR nvim
+set -gx VISUAL nvim
 
-#
-# useful aliases
-#
-alias ls="ls --color=auto"
-# File system
-alias ls='eza -lh --group-directories-first --icons'
-alias lsa='ls -a'
-alias lt='eza --tree --level=2 --long --icons --git'
-alias lta='lt -a'
-alias ff="fzf --preview 'bat --style=numbers --color=always {}'"
-# Directories
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias n='nvim'
-alias lzg='lazygit'
-alias lzd='lazydocker'
-alias e="$EDITOR"
-#
-# homebrew
-eval "$(/opt/homebrew/bin/brew shellenv)"
-# mise
-mise activate fish | source
-
-#tmux new-session -A -s mySession
-# try tool from tobi
-eval "$(~/.local/try.rb init ~/src/tries | string collect)"
+# Machine-local, untracked: work config, installer snippets (grok, opencode), etc.
+# Created by install.sh if missing; never linked from the repo.
+test -f ~/.config/fish/local.fish; and source ~/.config/fish/local.fish

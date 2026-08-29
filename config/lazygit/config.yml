@@ -1,0 +1,12 @@
+git:
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never
+  parseEmoji: true
+
+gui:
+  nerdFontsVersion: "3"
+  showFileTree: true
+  showRandomTip: false
+  showCommandLog: false
+  scrollHeight: 4

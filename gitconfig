@@ -1,86 +1,107 @@
+[user]
+  name = Timoteo Ponce
+  email = ponce.timoteo@gmail.com
+
+# Machine-specific / work config (credential managers, corp hosts, …).
+# Created empty by install.sh; never linked from the repo.
+[include]
+  path = ~/.gitconfig.local
+
+[includeIf "gitdir:~/projects/confinale/"]
+  path = ~/projects/confinale/.gitconfig
+
 [alias]
   ci = commit
   co = checkout
   df = diff
   br = branch
-  st =  status -s -b
+  st = status -s -b
   stat = status -s -b
-  checkout = co
-  lg = log -n 10 --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  lg = log -n 20 --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
   ls = ls-files --modified
   changes = ls-files --modified
   extra = ls-files --others
   cached = ls-files --cached
   staged = ls-files --stage
   missing = ls-files --deleted
-  prune= "git remote prune origin && git fetch -p"
-  gone = "!f() { git fetch --all --prune; git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -D; }; f"
-
-[color]
-  ui = auto
-  diff = auto
-  status = auto
-  branch = auto
+  undo = reset --soft HEAD~1
+  prune = "!git remote prune origin && git fetch -p"
+  gone = "!f() { git fetch --all --prune; git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D; }; f"
 
 [core]
-  pager = less -FXRS
-  ; pager = delta
+  pager = delta
   editor = nvim
-	excludesFile = ~/.gitignore
+  excludesFile = ~/.gitignore
   autocrlf = input
-	quotepath = false
+  quotepath = false
 
 [interactive]
   diffFilter = delta --color-only
 
-[user]
-  name = Timoteo Ponce
-  email = ponce.timoteo@gmail.com
-[pull]
-  rebase = false
-[init]
-	defaultBranch = main
+[delta]
+  navigate = true
+  line-numbers = true
+  side-by-side = true
+  hyperlinks = true
+
+[color]
+  ui = auto
+
+[diff]
+  algorithm = histogram
+  colorMoved = default
+  mnemonicPrefix = true
+  renames = true
+
+[merge]
+  tool = nvimdiff
+  conflictstyle = zdiff3
+
 [mergetool]
   prompt = true
   keepBackup = false
+
 [difftool]
   prompt = true
-[fetch]
-	prune = true
-	pruneTags = true
-	all = true
-[diff]
-	tool = diffmerge
-	algorithm = histogram
-	colorMoved = plain
-	mnemonicPrefix = true
-	renames = true
-	; algorithm = histogram
-	; tool = vimdiff
-[merge]
-	tool = diffmerge
-	; tool = vimdiff
-	conflictstyle = zdiff3
-[push]
-	autoSetupRemote = true
-	default = simple
-	followTags = true
-[difftool "diffmerge"]
-	cmd = /usr/local/bin/diffmerge \"$LOCAL\" \"$REMOTE\"
-[mergetool "diffmerge"]
-	trustExitCode = true
-	cmd = /usr/local/bin/diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
-[credential]
-	helper = 
-	helper = /usr/local/share/gcm-core/git-credential-manager
-[credential "https://dev.azure.com"]
-	useHttpPath = true
-[column]
-	ui = auto
-[branch]
-	sort = -committerdate
-[tag]
-	sort = version:refname
-[help]
-	autocorrect = prompt
 
+[rerere]
+  enabled = true
+
+[rebase]
+  autosquash = true
+  autostash = true
+
+[pull]
+  rebase = false
+
+[push]
+  autoSetupRemote = true
+  default = simple
+  followTags = true
+
+[fetch]
+  prune = true
+  pruneTags = true
+  all = true
+
+[init]
+  defaultBranch = main
+
+[branch]
+  sort = -committerdate
+
+[tag]
+  sort = version:refname
+
+[column]
+  ui = auto
+
+[help]
+  autocorrect = prompt
+
+[credential "https://github.com"]
+  helper =
+  helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+  helper =
+  helper = !gh auth git-credential
