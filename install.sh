@@ -50,6 +50,8 @@ brew_bundle() {
     # casks (ghostty, fonts) are macOS-only: install the formulae only
     grep '^brew ' "$DOTFILES_DIR/Brewfile" | sed 's/^brew "\([^"]*\)".*/\1/' \
       | xargs brew install || warn "some brew formulae failed"
+    # clipboard bridge for tmux / LazyVim on Linux
+    brew install xclip >/dev/null 2>&1 || warn "xclip install skipped"
   else
     # --no-upgrade: re-runs only install what's missing, they don't churn your
     # toolchain. Run `brew upgrade` yourself when you actually want new versions.
@@ -103,7 +105,7 @@ link_dotfiles() {
 
 ensure_local_files() {
   if [ ! -e "$HOME/.gitconfig.local" ]; then
-    printf '# Machine-specific git config (not tracked). Corp hosts, credential managers, etc.\n' > "$HOME/.gitconfig.local"
+    printf '# Machine-specific git config (not tracked). Your user.email, corp hosts, credential managers, etc.\n[user]\n\temail = ponce.timoteo@gmail.com\n' > "$HOME/.gitconfig.local"
     info "created ~/.gitconfig.local"
   fi
   if [ ! -e "$CONFIG_HOME/fish/local.fish" ]; then

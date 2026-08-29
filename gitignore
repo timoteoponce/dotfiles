@@ -1,10 +1,21 @@
-# Global gitignore (git core.excludesFile -> ~/.gitignore)
+# Global gitignore (git core.excludesFile -> ~/.gitignore).
+# Keep this conservative — it applies to every repo. Build artifacts and
+# language-specific ignores belong in each project's own .gitignore.
 
 # macOS
 .DS_Store
 .AppleDouble
 .LSOverride
+._*
+.Spotlight-V100
+.Trashes
 Icon?
+
+# Linux
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
 
 # Editors / IDEs
 *.swp
@@ -12,6 +23,7 @@ Icon?
 *~
 .idea/
 .vscode/
+.netrwhist
 .nvim.lua
 .exrc
 

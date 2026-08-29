@@ -5,7 +5,7 @@ Personal macOS (+ light Linux) setup. Small on purpose.
 ```bash
 git clone https://github.com/timoteoponce/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-./install.sh
+./install.sh          # safe to re-run any time
 ```
 
 ## Two package layers

@@ -1,9 +1,9 @@
 [user]
   name = Timoteo Ponce
-  email = ponce.timoteo@gmail.com
+  # email is set per-machine in ~/.gitconfig.local (kept out of the public repo)
 
-# Machine-specific / work config (credential managers, corp hosts, …).
-# Created empty by install.sh; never linked from the repo.
+# Machine-specific / work config: user.email, credential managers, corp hosts, …
+# Created by install.sh if missing; never linked from the repo.
 [include]
   path = ~/.gitconfig.local
 
@@ -54,12 +54,16 @@
   renames = true
 
 [merge]
-  tool = nvimdiff
+  tool = nvim-merge
   conflictstyle = zdiff3
 
 [mergetool]
   prompt = true
   keepBackup = false
+
+[mergetool "nvim-merge"]
+  cmd = nvim -d $LOCAL $MERGED $REMOTE -c '$wincmd w' -c 'wincmd J'
+  trustExitCode = true
 
 [difftool]
   prompt = true
