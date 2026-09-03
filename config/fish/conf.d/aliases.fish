@@ -3,10 +3,10 @@
 status is-interactive; or exit
 
 if type -q eza
-    alias ls 'eza -lh --group-directories-first --icons'
-    alias lsa 'eza -lah --group-directories-first --icons'
-    alias lt 'eza --tree --level=2 --long --icons --git'
-    alias lta 'eza --tree --level=2 --long --all --icons --git'
+    alias ls 'eza -lh --group-directories-first --icons=auto'
+    alias lsa 'eza -lah --group-directories-first --icons=auto'
+    alias lt 'eza --tree --level=2 --long --icons=auto --git'
+    alias lta 'eza --tree --level=2 --long --all --icons=auto --git'
 end
 
 if type -q bat

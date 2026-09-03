@@ -29,21 +29,12 @@
   gone = "!f() { git fetch --all --prune; git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D; }; f"
 
 [core]
-  pager = delta
+	# pager = cat
+  pager = less -FXRS
   editor = nvim
   excludesFile = ~/.gitignore
   autocrlf = input
   quotepath = false
-
-[interactive]
-  diffFilter = delta --color-only
-
-[delta]
-  navigate = true
-  line-numbers = true
-  side-by-side = true
-  hyperlinks = true
-
 [color]
   ui = auto
 
@@ -80,7 +71,7 @@
 
 [push]
   autoSetupRemote = true
-  default = simple
+	default = current
   followTags = true
 
 [fetch]
