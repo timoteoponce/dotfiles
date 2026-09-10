@@ -1,0 +1,158 @@
+#!/bin/sh
+# git-wtclean — remove worktrees whose branch has been merged.
+#
+# "Merged" is detected the way squash-merge workflows actually leave a trace:
+# after `git fetch --prune`, the branch's upstream is gone (the PR head branch
+# was deleted on the remote). `git branch --merged` does NOT work for
+# squash/rebase merges because the branch commits never land on the base verbatim.
+#
+# Usage: git wtclean [<base-branch>] [--dry-run|-n] [--force|-f]
+#   <base-branch>  branch to treat as the trunk, never removed (default: main)
+#   --dry-run, -n  print what would be removed, change nothing
+#   --force,  -f   pass --force to `git worktree remove` (drops dirty worktrees)
+#
+# For each merged worktree: `git worktree remove` then `git branch -D <branch>`.
+# A worktree that is dirty, locked, or currently checked out here is skipped and
+# its branch is kept.
+
+set -u
+
+base="main"
+dry_run=0
+force=0
+
+for arg in "$@"; do
+	case "$arg" in
+	--dry-run | -n) dry_run=1 ;;
+	--force | -f) force=1 ;;
+	-h | --help)
+		cat <<'USAGE'
+git wtclean — remove worktrees whose branch has been merged (upstream gone).
+
+Usage: git wtclean [<base-branch>] [--dry-run|-n] [--force|-f]
+  <base-branch>  trunk branch, never removed (default: main)
+  --dry-run, -n  print what would be removed, change nothing
+  --force,  -f   pass --force to `git worktree remove` (drops dirty worktrees)
+
+For each merged worktree: `git worktree remove` then `git branch -D <branch>`.
+A worktree that is dirty, locked, or checked out here is skipped, branch kept.
+USAGE
+		exit 0
+		;;
+	-*)
+		echo "git wtclean: unknown option: $arg" >&2
+		exit 2
+		;;
+	*) base="$arg" ;;
+	esac
+done
+
+# Colours, only when stdout is a terminal.
+if [ -t 1 ]; then
+	B=$(printf '\033[1m')
+	D=$(printf '\033[2m')
+	G=$(printf '\033[32m')
+	Y=$(printf '\033[33m')
+	R=$(printf '\033[31m')
+	Z=$(printf '\033[0m')
+else
+	B='' D='' G='' Y='' R='' Z=''
+fi
+
+mode="live"
+[ "$dry_run" -eq 1 ] && mode="dry-run"
+[ "$force" -eq 1 ] && mode="$mode +force"
+
+printf '%sgit wtclean%s  base=%s%s%s  mode=%s%s%s\n' \
+	"$B" "$Z" "$B" "$base" "$Z" "$B" "$mode" "$Z"
+
+printf '%s· fetching + pruning remotes…%s\n' "$D" "$Z"
+git fetch --all --prune --quiet
+
+# Branches whose upstream tracking ref is gone -> merged & remote-deleted.
+gone=$(git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads |
+	awk '$NF == "[gone]" { print $1 }')
+gone_count=$(printf '%s\n' "$gone" | grep -c . || true)
+
+printf '%s· %s local branch(es) have a deleted upstream (merged)%s\n' \
+	"$D" "$gone_count" "$Z"
+
+if [ -z "$gone" ]; then
+	git worktree prune
+	printf '%sNothing to clean.%s\n' "$G" "$Z"
+	exit 0
+fi
+
+removed=0
+deleted=0
+skipped=0
+kept=""
+
+wt='' head=''
+while IFS= read -r line; do
+	case "$line" in
+	"worktree "*)
+		wt=${line#worktree }
+		head=''
+		;;
+	"HEAD "*)
+		head=${line#HEAD }
+		;;
+	"branch refs/heads/"*)
+		branch=${line#branch refs/heads/}
+		name=$(basename -- "$wt")
+
+		[ "$branch" = "$base" ] && continue
+		if ! printf '%s\n' "$gone" | grep -qxF -- "$branch"; then
+			kept="$kept $name"
+			continue
+		fi
+
+		subject=$(git log -1 --format='%s' "$head" 2>/dev/null)
+		printf '\n%s▸ %s%s  %s(%s)%s\n' "$Y" "$name" "$Z" "$D" "$branch" "$Z"
+		printf '  %spath  %s%s\n' "$D" "$Z" "$wt"
+		printf '  %shead  %s%s %s\n' "$D" "$Z" "$(printf '%.9s' "$head")" "$subject"
+
+		if [ "$dry_run" -eq 1 ]; then
+			printf '  %swould remove worktree + delete branch%s\n' "$D" "$Z"
+			removed=$((removed + 1))
+			continue
+		fi
+
+		if [ "$force" -eq 1 ]; then
+			err=$(git worktree remove --force "$wt" 2>&1)
+			st=$?
+		else
+			err=$(git worktree remove "$wt" 2>&1)
+			st=$?
+		fi
+		if [ "$st" -ne 0 ]; then
+			printf '  %s✗ skipped:%s %s\n' "$R" "$Z" "$err"
+			skipped=$((skipped + 1))
+			continue
+		fi
+		printf '  %s✓%s worktree removed\n' "$G" "$Z"
+		removed=$((removed + 1))
+
+		if git branch -D "$branch" >/dev/null 2>&1; then
+			printf '  %s✓%s branch %s deleted\n' "$G" "$Z" "$branch"
+			deleted=$((deleted + 1))
+		else
+			printf '  %s!%s branch %s kept (delete failed)\n' "$Y" "$Z" "$branch"
+		fi
+		;;
+	esac
+done <<EOF
+$(git worktree list --porcelain)
+EOF
+
+git worktree prune
+
+echo
+if [ "$dry_run" -eq 1 ]; then
+	printf '%ssummary%s  %d worktree(s) would be removed\n' "$B" "$Z" "$removed"
+else
+	printf '%ssummary%s  %d worktree(s) removed · %d branch(es) deleted · %d skipped\n' \
+		"$B" "$Z" "$removed" "$deleted" "$skipped"
+fi
+[ -n "$kept" ] && printf '%skept (not merged):%s%s\n' "$D" "$Z" "$kept"

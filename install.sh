@@ -101,6 +101,12 @@ link_dotfiles() {
   link_file config/lazygit/config.yml    "$CONFIG_HOME/lazygit/config.yml"
   link_file config/lazydocker/config.yml "$CONFIG_HOME/lazydocker/config.yml"
   link_file config/bat/config            "$CONFIG_HOME/bat/config"
+
+  # personal scripts -> ~/.local/bin (on PATH; git auto-discovers git-* as subcommands)
+  for f in "$DOTFILES_DIR"/bin/*; do
+    [ -e "$f" ] || continue
+    link_file "bin/$(basename "$f")" "$HOME/.local/bin/$(basename "$f")"
+  done
 }
 
 ensure_local_files() {
