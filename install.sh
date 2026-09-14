@@ -81,12 +81,13 @@ link_file() {
 link_dotfiles() {
   info "Linking dotfiles..."
 
-  link_file gitconfig  "$HOME/.gitconfig"
-  link_file gitignore  "$HOME/.gitignore"
-  link_file tmux.conf  "$HOME/.tmux.conf"
-  link_file ideavimrc  "$HOME/.ideavimrc"
-  link_file psqlrc     "$HOME/.psqlrc"
-  link_file mise.toml  "$CONFIG_HOME/mise/config.toml"
+  link_file gitconfig      "$HOME/.gitconfig"
+  link_file gitignore      "$HOME/.gitignore"
+  link_file tmux.conf      "$HOME/.tmux.conf"
+  link_file ideavimrc      "$HOME/.ideavimrc"
+  link_file psqlrc         "$HOME/.psqlrc"
+  link_file aerospace.toml "$HOME/.aerospace.toml"
+  link_file mise.toml      "$CONFIG_HOME/mise/config.toml"
 
   # fish: link individual files so fish's own runtime files stay local
   link_file config/fish/config.fish "$CONFIG_HOME/fish/config.fish"

@@ -26,6 +26,7 @@ files like `fish_variables` stay local):
 |------|--------|
 | `gitconfig` / `gitignore` | `~/.gitconfig` / `~/.gitignore` |
 | `tmux.conf`, `ideavimrc`, `psqlrc` | `~/.tmux.conf`, `~/.ideavimrc`, `~/.psqlrc` |
+| `aerospace.toml` | `~/.aerospace.toml` |
 | `config/fish/{config.fish,conf.d/*,functions/*}` | `~/.config/fish/…` |
 | `config/ghostty/config` | `~/.config/ghostty/config` |
 | `config/lazygit/config.yml` | `~/.config/lazygit/config.yml` |
