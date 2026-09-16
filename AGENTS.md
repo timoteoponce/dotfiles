@@ -47,8 +47,8 @@ files like `fish_variables` stay local. Existing real files are moved to
 - `~/.gitconfig.local` — `user.email`, credential managers, corp hosts. Pulled in
   via `[include]` in `gitconfig`. The tracked `gitconfig` has **no email** on
   purpose; don't add one.
-- `~/.config/fish/local.fish` — extra PATH, installer snippets (grok, opencode),
-  work aliases, the `try` function. Sourced at the end of `config.fish`.
+- `~/.config/fish/local.fish` — machine-specific PATH, aliases, and work-only
+  snippets. Sourced at the end of `config.fish`.
 
 `install.sh` creates both if missing.
 

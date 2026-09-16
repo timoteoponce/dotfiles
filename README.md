@@ -40,7 +40,7 @@ Existing real files are backed up to `*.bak.<timestamp>` before linking.
 The installer creates these empty; put anything host- or work-specific in them:
 
 - `~/.gitconfig.local` — corp hosts, credential managers (`git-credential-manager`, etc.)
-- `~/.config/fish/local.fish` — extra `PATH`, installer snippets (grok, opencode…), work aliases
+- `~/.config/fish/local.fish` — machine-specific `PATH`, aliases, and work-only snippets
 
 ## fish
 
