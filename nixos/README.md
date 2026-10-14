@@ -11,7 +11,7 @@ Homebrew, mise, and the shell configs stay in the rest of the repo.
 - Tailscale, with the firewall open. Log in once: `sudo tailscale up`
 - Podman, a `docker` command, and `docker compose`, pulling public images from Docker Hub
 - Firefox, Brave, Edge, LibreOffice, Spotify, Transmission Qt, Ghostty, Alacritty, Zed, VS Code
-- System tools: vim, nano, btop, git, gh, curl
+- System tools: vim, nano, btop, git, curl. `gh` comes from the Brewfile
 - Edge app entries: Teams, Outlook, Calendar, OneDrive, Google Drive
 
 IntelliJ is not included. Neovim and the other CLI tools stay in `mise.toml`.
@@ -37,8 +37,8 @@ command. `install.sh` passes the experimental-features flag for you.
 
 ## Publish with GitHub
 
-`git` and `gh` are not on this machine until the flake is applied, so use a
-temporary copy for the first push:
+Before Homebrew is installed, `gh` is not on the system. Use a temporary copy
+for the first push:
 
 ```bash
 nix-shell -p git gh

@@ -116,7 +116,6 @@
     nano
     btop
     git
-    gh
     curl
     docker-compose
   ];
