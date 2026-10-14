@@ -6,6 +6,7 @@
   imports = [
     ./hardware-configuration.nix
     ./edge-apps.nix
+    ./homebrew-path.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
@@ -121,20 +122,9 @@
   ];
 
   # Re-applied on each rebuild. Edit nixos/powerdevilrc, then switch again.
-  # The extra symlinks are the paths the Homebrew installer calls by absolute
-  # name. NixOS only provides /bin/sh and /usr/bin/env.
   systemd.tmpfiles.rules = [
     "d /home/timoteo/.config 0755 timoteo users - -"
     "C+ /home/timoteo/.config/powerdevilrc 0644 timoteo users - ${./powerdevilrc}"
-    "L+ /bin/bash - - - - ${pkgs.bashInteractive}/bin/bash"
-    "L+ /bin/chown - - - - ${pkgs.coreutils}/bin/chown"
-    "L+ /bin/chgrp - - - - ${pkgs.coreutils}/bin/chgrp"
-    "L+ /bin/chmod - - - - ${pkgs.coreutils}/bin/chmod"
-    "L+ /bin/mkdir - - - - ${pkgs.coreutils}/bin/mkdir"
-    "L+ /bin/touch - - - - ${pkgs.coreutils}/bin/touch"
-    "L+ /usr/bin/stat - - - - ${pkgs.coreutils}/bin/stat"
-    "L+ /usr/bin/install - - - - ${pkgs.coreutils}/bin/install"
-    "L+ /usr/bin/sudo - - - - /run/wrappers/bin/sudo"
   ];
 
   system.stateVersion = "26.05";
