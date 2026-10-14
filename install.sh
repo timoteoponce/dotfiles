@@ -142,7 +142,23 @@ install_lazyvim() {
     || warn "LazyVim clone failed"
 }
 
+apply_nixos() {
+  [ "$(detect_os)" = "linux" ] || return 0
+  [ -e /etc/NIXOS ] || return 0
+  [ -f "$DOTFILES_DIR/flake.nix" ] || { warn "no flake.nix; skipping NixOS rebuild"; return; }
+  info "Applying NixOS configuration (laptop)..."
+  sudo nixos-rebuild switch --flake "$DOTFILES_DIR#laptop" \
+    --extra-experimental-features 'nix-command flakes' \
+    || warn "nixos-rebuild failed; system packages may be missing"
+}
+
 change_shell() {
+  # The NixOS flake sets the login shell to its own fish. chsh to Homebrew's
+  # fish can point login at a binary that does not start yet.
+  if [ -e /etc/NIXOS ]; then
+    info "NixOS owns the login shell; leaving it alone"
+    return
+  fi
   fish_path="$(command -v fish)" || { warn "fish not found; skipping shell change"; return; }
   [ "$(login_shell)" = "$fish_path" ] && { info "login shell already fish"; return; }
 
@@ -168,6 +184,7 @@ main() {
   [ -d "$DOTFILES_DIR" ] || { echo "Clone dotfiles to $DOTFILES_DIR first"; exit 1; }
   info "Detected OS: $(detect_os)"
 
+  apply_nixos
   install_homebrew
   brew_bundle
   link_dotfiles

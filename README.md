@@ -8,6 +8,10 @@ cd ~/.dotfiles
 ./install.sh          # safe to re-run any time
 ```
 
+On the NixOS laptop, `./install.sh` also applies `nixos/` (see `nixos/README.md`).
+That is the system: KDE, browsers, Podman, Tailscale, Zed, VS Code. Homebrew
+and mise still install the shell tools and runtimes. IntelliJ is not installed.
+
 ## Two package layers
 
 | Layer | File | What goes here |
