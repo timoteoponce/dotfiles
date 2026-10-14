@@ -1,13 +1,15 @@
-# NixOS config for the Dell Inspiron 3493.
-# Source of truth is this repo, not /etc/nixos, after the first flake switch.
-{ pkgs, ... }:
+# Shared NixOS config. Disk layout and CPU firmware come from
+# /etc/nixos/hardware-configuration.nix on each machine. Anything that
+# should not follow this repo goes in /etc/nixos/local.nix.
+{ pkgs, lib, ... }:
 
 {
   imports = [
-    ./hardware-configuration.nix
+    /etc/nixos/hardware-configuration.nix
     ./edge-apps.nix
     ./homebrew-path.nix
-  ];
+  ]
+  ++ lib.optional (builtins.pathExists /etc/nixos/local.nix) /etc/nixos/local.nix;
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -15,8 +17,6 @@
 
   networking.hostName = "nixos";
   networking.networkmanager.enable = true;
-  # The QCA9377 in this Inspiron drops the link when Wi-Fi power saving is on.
-  networking.networkmanager.wifi.powersave = false;
 
   time.timeZone = "America/La_Paz";
   i18n.defaultLocale = "en_US.UTF-8";
@@ -54,13 +54,8 @@
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
 
-  # Ice Lake Iris Plus. intel-media-driver is the VA-API driver for this GPU.
-  hardware.graphics = {
-    enable = true;
-    extraPackages = [ pkgs.intel-media-driver ];
-  };
+  hardware.graphics.enable = true;
 
-  services.thermald.enable = true;
   services.fwupd.enable = true;
 
   services.tailscale = {

@@ -1,5 +1,5 @@
 {
-  description = "NixOS configuration for the Inspiron 3493 laptop";
+  description = "Shared NixOS configuration. Hardware comes from /etc/nixos on each machine.";
 
   # Pinned to the revision this machine was installed with.
   # Bump with: nix flake update nixpkgs

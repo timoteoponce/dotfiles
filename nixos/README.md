@@ -1,13 +1,23 @@
 # NixOS laptop
 
-This directory is the system half of the setup for the Dell Inspiron 3493.
-Homebrew, mise, and the shell configs stay in the rest of the repo.
+This directory is the shared system half of the setup. Homebrew, mise, and the
+shell configs stay in the rest of the repo. Every NixOS machine that runs
+`install.sh` applies the same flake, `laptop`.
+
+Disks, initrd modules, and CPU microcode are not in this repo. The installer
+writes those to `/etc/nixos/hardware-configuration.nix`, and the flake reads
+that file. A second computer needs its own scan (`sudo nixos-generate-config`).
+Do not copy this Inspiron's file onto it.
+
+Machine-only settings go in `/etc/nixos/local.nix`, which the flake imports
+when the file exists. See `local.nix.example` for this Inspiron's Wi-Fi,
+Intel video decode, and thermald settings.
 
 ## What the flake installs
 
 - KDE Plasma 6, the current user `timoteo`, fish as the login shell
 - Battery policy from `powerdevilrc` (balanced on AC, power-saver on battery)
-- Bluetooth, Intel video decode, thermald, fwupd
+- Bluetooth, firmware updates, and graphics. Intel video decode and thermald are in `/etc/nixos/local.nix` on this Inspiron only
 - Tailscale, with the firewall open. Log in once: `sudo tailscale up`
 - Podman, a `docker` command, and `docker compose`, pulling public images from Docker Hub
 - Firefox, Brave, Edge, LibreOffice, Spotify, Transmission Qt, Ghostty, Alacritty, Zed, VS Code

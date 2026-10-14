@@ -147,10 +147,15 @@ apply_nixos() {
   [ "$(detect_os)" = "linux" ] || return 0
   [ -e /etc/NIXOS ] || return 0
   [ -f "$DOTFILES_DIR/flake.nix" ] || { warn "no flake.nix; skipping NixOS rebuild"; return; }
+  if [ ! -f /etc/nixos/hardware-configuration.nix ]; then
+    warn "missing /etc/nixos/hardware-configuration.nix"
+    warn "run: sudo nixos-generate-config"
+    return
+  fi
   info "Applying NixOS configuration (laptop)..."
-  # nixos-rebuild itself passes the flakes feature to Nix. This program
-  # does not accept --extra-experimental-features.
-  if sudo nixos-rebuild switch --flake "$DOTFILES_DIR#laptop"; then
+  # --impure lets the flake read this machine's /etc/nixos files.
+  # nixos-rebuild itself turns the flakes feature on.
+  if sudo nixos-rebuild switch --flake "$DOTFILES_DIR#laptop" --impure; then
     if [ -e /run/current-system/sw/share/nix-ld/lib/ld.so ]; then
       export NIX_LD=/run/current-system/sw/share/nix-ld/lib/ld.so
       export NIX_LD_LIBRARY_PATH=/run/current-system/sw/share/nix-ld/lib
