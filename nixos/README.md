@@ -32,8 +32,8 @@ The first time, `sudo` asks for your password, and the Homebrew installer asks
 once more to create the `linuxbrew` user. Log out and back in afterwards so
 fish, `nix-ld`, and the Bluetooth tray pick up the new session.
 
-The first switch on a system that does not have flakes enabled yet is the same
-command. `install.sh` passes the experimental-features flag for you.
+The first switch works even when flakes are not enabled yet. `nixos-rebuild`
+turns that feature on for its own Nix calls.
 
 ## Publish with GitHub
 

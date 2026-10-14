@@ -34,7 +34,8 @@ install_homebrew() {
     info "Homebrew present"
   else
     info "Installing Homebrew..."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || {
+    # NixOS has no /bin/bash until the flake's tmpfiles symlinks are in place.
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || {
       warn "Homebrew install failed; skipping brew steps"; return 1
     }
   fi
@@ -147,9 +148,16 @@ apply_nixos() {
   [ -e /etc/NIXOS ] || return 0
   [ -f "$DOTFILES_DIR/flake.nix" ] || { warn "no flake.nix; skipping NixOS rebuild"; return; }
   info "Applying NixOS configuration (laptop)..."
-  sudo nixos-rebuild switch --flake "$DOTFILES_DIR#laptop" \
-    --extra-experimental-features 'nix-command flakes' \
-    || warn "nixos-rebuild failed; system packages may be missing"
+  # nixos-rebuild itself passes the flakes feature to Nix. This program
+  # does not accept --extra-experimental-features.
+  if sudo nixos-rebuild switch --flake "$DOTFILES_DIR#laptop"; then
+    if [ -e /run/current-system/sw/share/nix-ld/lib/ld.so ]; then
+      export NIX_LD=/run/current-system/sw/share/nix-ld/lib/ld.so
+      export NIX_LD_LIBRARY_PATH=/run/current-system/sw/share/nix-ld/lib
+    fi
+  else
+    warn "nixos-rebuild failed; system packages may be missing"
+  fi
 }
 
 change_shell() {
