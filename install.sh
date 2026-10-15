@@ -34,7 +34,8 @@ install_homebrew() {
     info "Homebrew present"
   else
     info "Installing Homebrew..."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || {
+    # NixOS has no /bin/bash until the flake's tmpfiles symlinks are in place.
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || {
       warn "Homebrew install failed; skipping brew steps"; return 1
     }
   fi
@@ -50,7 +51,7 @@ brew_bundle() {
     # casks (ghostty, fonts) are macOS-only: install the formulae only
     grep '^brew ' "$DOTFILES_DIR/Brewfile" | sed 's/^brew "\([^"]*\)".*/\1/' \
       | xargs brew install || warn "some brew formulae failed"
-    # clipboard bridge for tmux / LazyVim on Linux
+    # clipboard bridge for tmux / Neovim on Linux
     brew install xclip >/dev/null 2>&1 || warn "xclip install skipped"
   else
     # --no-upgrade: re-runs only install what's missing, they don't churn your
@@ -131,20 +132,62 @@ mise_install() {
   mise install || warn "mise install reported errors"
 }
 
-install_lazyvim() {
-  nvim_config_dir="$CONFIG_HOME/nvim"
-  if [ -d "$nvim_config_dir" ]; then
-    info "nvim config already present; leaving it alone"
+install_nvim() {
+  src="$DOTFILES_DIR/config/nvim"
+  dest="$CONFIG_HOME/nvim"
+  if [ -L "$dest" ] && [ "$(readlink "$dest")" = "$src" ]; then
+    info "nvim config already linked"
+  else
+    if [ -e "$dest" ] || [ -L "$dest" ]; then
+      backup="$dest.bak.$(date +%s)"
+      mv "$dest" "$backup"
+      info "backed up nvim config -> $(basename "$backup")"
+    fi
+    mkdir -p "$(dirname "$dest")"
+    ln -s "$src" "$dest"
+    printf '  linked %s\n' "$dest"
+  fi
+  # mise's neovim, so Mac and other Linux boxes don't pick up an older nvim.
+  if command -v mise >/dev/null 2>&1; then
+    info "Installing Neovim plugins..."
+    mise exec -- nvim --headless "+qa" || warn "nvim plugin install failed"
+  elif command -v nvim >/dev/null 2>&1; then
+    info "Installing Neovim plugins..."
+    nvim --headless "+qa" || warn "nvim plugin install failed"
+  else
+    warn "nvim not on PATH; plugins install on first launch"
+  fi
+}
+
+apply_nixos() {
+  [ "$(detect_os)" = "linux" ] || return 0
+  [ -e /etc/NIXOS ] || return 0
+  [ -f "$DOTFILES_DIR/flake.nix" ] || { warn "no flake.nix; skipping NixOS rebuild"; return; }
+  if [ ! -f /etc/nixos/hardware-configuration.nix ]; then
+    warn "missing /etc/nixos/hardware-configuration.nix"
+    warn "run: sudo nixos-generate-config"
     return
   fi
-  info "Installing LazyVim starter..."
-  git clone https://github.com/LazyVim/starter "$nvim_config_dir" \
-    && rm -rf "$nvim_config_dir/.git" \
-    && info "LazyVim installed. Run 'nvim' to sync plugins." \
-    || warn "LazyVim clone failed"
+  info "Applying NixOS configuration (laptop)..."
+  # --impure lets the flake read this machine's /etc/nixos files.
+  # nixos-rebuild itself turns the flakes feature on.
+  if sudo nixos-rebuild switch --flake "$DOTFILES_DIR#laptop" --impure; then
+    if [ -e /run/current-system/sw/share/nix-ld/lib/ld.so ]; then
+      export NIX_LD=/run/current-system/sw/share/nix-ld/lib/ld.so
+      export NIX_LD_LIBRARY_PATH=/run/current-system/sw/share/nix-ld/lib
+    fi
+  else
+    warn "nixos-rebuild failed; system packages may be missing"
+  fi
 }
 
 change_shell() {
+  # The NixOS flake sets the login shell to its own fish. chsh to Homebrew's
+  # fish can point login at a binary that does not start yet.
+  if [ -e /etc/NIXOS ]; then
+    info "NixOS owns the login shell; leaving it alone"
+    return
+  fi
   fish_path="$(command -v fish)" || { warn "fish not found; skipping shell change"; return; }
   [ "$(login_shell)" = "$fish_path" ] && { info "login shell already fish"; return; }
 
@@ -170,12 +213,13 @@ main() {
   [ -d "$DOTFILES_DIR" ] || { echo "Clone dotfiles to $DOTFILES_DIR first"; exit 1; }
   info "Detected OS: $(detect_os)"
 
+  apply_nixos
   install_homebrew
   brew_bundle
   link_dotfiles
   ensure_local_files
   mise_install
-  install_lazyvim
+  install_nvim
   change_shell
 
   info "Done. Re-run this script any time; it only does what's missing."

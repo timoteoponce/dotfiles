@@ -7,14 +7,14 @@ Personal dotfiles for macOS (+ light Linux). Kept deliberately small.
 Configs: **fish** (`config/fish/`), **git** (`gitconfig` + `gitignore`), **tmux**
 (`tmux.conf`), **Ghostty** (`config/ghostty/`), **Alacritty**
 (`config/alacritty/`), **lazygit** / **lazydocker** (`config/`), **bat**
-(`config/bat/`), **IdeaVim** (`ideavimrc`), **psql** (`psqlrc`).
-Neovim/LazyVim lives at `~/.config/nvim` and is **not** managed here.
+(`config/bat/`), **IdeaVim** (`ideavimrc`), **psql** (`psqlrc`),
+**Neovim** (`config/nvim/`, the one directory symlink).
 
 ## Structure
 
 ```
 .dotfiles/
-├── install.sh            # single idempotent installer (brew + mise + symlinks + LazyVim + chsh)
+├── install.sh            # single idempotent installer (brew + mise + symlinks + nvim + chsh)
 ├── Brewfile              # bootstrap layer: fish, git, gh, mise, tmux, ghostty + alacritty casks, font
 ├── mise.toml             # tool + runtime layer: pinned CLIs + java/clojure/ruby -> ~/.config/mise/config.toml
 ├── gitconfig / gitignore # -> ~/.gitconfig / ~/.gitignore
@@ -26,7 +26,8 @@ Neovim/LazyVim lives at `~/.config/nvim` and is **not** managed here.
     ├── alacritty/alacritty.toml
     ├── lazygit/config.yml
     ├── lazydocker/config.yml
-    └── bat/config
+    ├── bat/config
+    └── nvim/init.lua      # whole directory is symlinked to ~/.config/nvim
 ```
 
 ## Two package layers
@@ -40,8 +41,9 @@ Neovim/LazyVim lives at `~/.config/nvim` and is **not** managed here.
 
 `./install.sh` does everything and is safe to re-run: installed packages are
 skipped, correct symlinks are left untouched, and a failing step warns instead of
-aborting. It symlinks **individual files** (never whole dirs) so tool-managed
-files like `fish_variables` stay local. Existing real files are moved to
+aborting. It symlinks **individual files** so tool-managed files like
+`fish_variables` stay local. `config/nvim` is the exception: the whole directory
+is linked to `~/.config/nvim`. Existing real files are moved to
 `*.bak.<timestamp>` before linking. There is no `rcm` — do not reintroduce it.
 
 ## Machine-specific / secret bits (untracked)
@@ -49,8 +51,8 @@ files like `fish_variables` stay local. Existing real files are moved to
 - `~/.gitconfig.local` — `user.email`, credential managers, corp hosts. Pulled in
   via `[include]` in `gitconfig`. The tracked `gitconfig` has **no email** on
   purpose; don't add one.
-- `~/.config/fish/local.fish` — extra PATH, installer snippets (grok, opencode),
-  work aliases, the `try` function. Sourced at the end of `config.fish`.
+- `~/.config/fish/local.fish` — machine-specific PATH, aliases, and work-only
+  snippets. Sourced at the end of `config.fish`.
 
 `install.sh` creates both if missing.
 
@@ -82,7 +84,6 @@ ghostty +show-config >/dev/null        # if ghostty installed
 
 ## Don't
 
-- Reintroduce `rcm`, `vimrc`, or a `vim/` tree (removed — user is on LazyVim).
-- Edit LazyVim from this repo (`~/.config/nvim` is separate).
+- Reintroduce `rcm`, `vimrc`, a `vim/` tree, or LazyVim. Neovim config is `config/nvim/init.lua`.
 - Put `user.email`, tokens, or corp URLs in tracked files — use `*.local`.
 - Add build-artifact patterns to the global `gitignore` (per-project only).

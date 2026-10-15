@@ -19,14 +19,12 @@
   stat = status -s -b
   lg = log -n 20 --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
   ls = ls-files --modified
-  changes = ls-files --modified
   extra = ls-files --others
   cached = ls-files --cached
   staged = ls-files --stage
   missing = ls-files --deleted
   undo = reset --soft HEAD~1
   prune = "!git remote prune origin && git fetch -p"
-  gone = "!f() { git fetch --all --prune; git branch -vv | awk '/: gone]/{print $1}' | xargs -r git branch -D; }; f"
 
 [core]
 	# pager = cat

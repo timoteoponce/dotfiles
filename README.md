@@ -8,6 +8,11 @@ cd ~/.dotfiles
 ./install.sh          # safe to re-run any time
 ```
 
+On a NixOS machine, `./install.sh` also applies `nixos/` (see `nixos/README.md`).
+Each machine keeps its own `/etc/nixos/hardware-configuration.nix`.
+That is the system: KDE, browsers, Podman, Tailscale, Zed, VS Code. Homebrew
+and mise still install the shell tools and runtimes. IntelliJ is not installed.
+
 ## Two package layers
 
 | Layer | File | What goes here |
@@ -42,7 +47,7 @@ Existing real files are backed up to `*.bak.<timestamp>` before linking.
 The installer creates these empty; put anything host- or work-specific in them:
 
 - `~/.gitconfig.local` — corp hosts, credential managers (`git-credential-manager`, etc.)
-- `~/.config/fish/local.fish` — extra `PATH`, installer snippets (grok, opencode…), work aliases
+- `~/.config/fish/local.fish` — machine-specific `PATH`, aliases, and work-only snippets
 
 ## fish
 
@@ -61,5 +66,14 @@ autostash on. GitHub auth via `gh`.
 
 ## Neovim
 
-LazyVim lives in `~/.config/nvim` and is **not** managed by this repo — clone it
-once (the installer does, if absent) and manage it on its own.
+`config/nvim` is the whole config, linked to `~/.config/nvim`. Leader is `,`.
+
+- `,f` files, `,b` buffers, `,/` search (Telescope)
+- `,e` folder tree, hidden until then (nvim-tree)
+- `,r` search and replace across files, with a preview
+- `,t` cycle a few built-in colorschemes
+
+Neovim's own syntax handles highlighting, including Markdown. Autocomplete is off.
+Plugins install through Neovim 0.12's `vim.pack` the first time `nvim` runs.
+`mise install` provides that Neovim on macOS and other Linux too. An older
+`nvim` still opens files; it just skips the plugins.
