@@ -58,9 +58,14 @@
 
   services.fwupd.enable = true;
 
-  # Local model runner. Listens on 127.0.0.1:11434 only.
-  # The default package is CPU. A GPU build can go in /etc/nixos/local.nix.
-  services.ollama.enable = true;
+  # Model server for a remote OpenCode machine. CPU build.
+  # Listens on every interface, but the firewall allows port 11434
+  # only from the Tailscale network. Ollama has no login of its own.
+  services.ollama = {
+    enable = true;
+    host = "0.0.0.0";
+  };
+  networking.firewall.interfaces.tailscale0.allowedTCPPorts = [ 11434 ];
 
   # Remote login as timoteo. Root password login stays off.
   # The NixOS module opens port 22. Password login is the module default.
