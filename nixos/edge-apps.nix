@@ -53,5 +53,29 @@ in
       url = "https://drive.google.com/";
       comment = "Google Drive";
     })
+    (app {
+      name = "edge-youtube";
+      desktopName = "YouTube";
+      url = "https://www.youtube.com/";
+      comment = "YouTube";
+    })
+    (app {
+      name = "edge-whatsapp";
+      desktopName = "WhatsApp";
+      url = "https://web.whatsapp.com/";
+      comment = "WhatsApp";
+    })
+    (app {
+      name = "edge-x";
+      desktopName = "X";
+      url = "https://x.com/";
+      comment = "X";
+    })
+    (app {
+      name = "edge-netflix";
+      desktopName = "Netflix";
+      url = "https://www.netflix.com/";
+      comment = "Netflix";
+    })
   ];
 }

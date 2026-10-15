@@ -64,5 +64,12 @@ autostash on. GitHub auth via `gh`.
 
 ## Neovim
 
-LazyVim lives in `~/.config/nvim` and is **not** managed by this repo — clone it
-once (the installer does, if absent) and manage it on its own.
+`config/nvim` is the whole config, linked to `~/.config/nvim`. Leader is `,`.
+
+- `,f` files, `,b` buffers, `,/` search (Telescope)
+- `,e` folder tree, hidden until then (nvim-tree)
+- `,r` search and replace across files, with a preview
+- `,t` cycle a few built-in colorschemes
+
+Neovim's own syntax handles highlighting, including Markdown. Autocomplete is off.
+Plugins install through Neovim 0.12's `vim.pack` the first time `nvim` runs.

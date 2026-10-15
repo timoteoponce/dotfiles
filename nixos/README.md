@@ -20,9 +20,9 @@ Intel video decode, and thermald settings.
 - Bluetooth, firmware updates, and graphics. Intel video decode and thermald are in `/etc/nixos/local.nix` on this Inspiron only
 - Tailscale, with the firewall open. Log in once: `sudo tailscale up`
 - Podman, a `docker` command, and `docker compose`, pulling public images from Docker Hub
-- Firefox, Brave, Edge, LibreOffice, Spotify, Transmission Qt, Ghostty, Alacritty, Zed, VS Code
+- Firefox, Brave, Edge, LibreOffice, Spotify, pCloud, Transmission Qt, Ghostty, Alacritty, Zed, VS Code
 - System tools: vim, nano, btop, git, curl. `gh` comes from the Brewfile
-- Edge app entries: Teams, Outlook, Calendar, OneDrive, Google Drive
+- Edge app entries: Teams, Outlook, Calendar, OneDrive, Google Drive, YouTube, WhatsApp, X, Netflix
 
 IntelliJ is not included. Neovim and the other CLI tools stay in `mise.toml`.
 

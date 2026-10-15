@@ -130,17 +130,27 @@ mise_install() {
   mise install || warn "mise install reported errors"
 }
 
-install_lazyvim() {
-  nvim_config_dir="$CONFIG_HOME/nvim"
-  if [ -d "$nvim_config_dir" ]; then
-    info "nvim config already present; leaving it alone"
+install_nvim() {
+  src="$DOTFILES_DIR/config/nvim"
+  dest="$CONFIG_HOME/nvim"
+  if [ -L "$dest" ] && [ "$(readlink "$dest")" = "$src" ]; then
+    info "nvim config already linked"
+  else
+    if [ -e "$dest" ] || [ -L "$dest" ]; then
+      backup="$dest.bak.$(date +%s)"
+      mv "$dest" "$backup"
+      info "backed up nvim config -> $(basename "$backup")"
+    fi
+    mkdir -p "$(dirname "$dest")"
+    ln -s "$src" "$dest"
+    printf '  linked %s\n' "$dest"
+  fi
+  if ! command -v nvim >/dev/null 2>&1; then
+    warn "nvim not on PATH; plugins install on first launch"
     return
   fi
-  info "Installing LazyVim starter..."
-  git clone https://github.com/LazyVim/starter "$nvim_config_dir" \
-    && rm -rf "$nvim_config_dir/.git" \
-    && info "LazyVim installed. Run 'nvim' to sync plugins." \
-    || warn "LazyVim clone failed"
+  info "Installing Neovim plugins..."
+  nvim --headless "+qa" || warn "nvim plugin install failed"
 }
 
 apply_nixos() {
@@ -203,7 +213,7 @@ main() {
   link_dotfiles
   ensure_local_files
   mise_install
-  install_lazyvim
+  install_nvim
   change_shell
 
   info "Done. Re-run this script any time; it only does what's missing."

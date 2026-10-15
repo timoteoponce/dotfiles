@@ -104,6 +104,7 @@
       alacritty
       zed-editor
       vscode
+      pcloud
     ];
   };
 
