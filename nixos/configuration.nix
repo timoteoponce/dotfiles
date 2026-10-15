@@ -58,6 +58,14 @@
 
   services.fwupd.enable = true;
 
+  # Local model runner. Listens on 127.0.0.1:11434 only.
+  # The default package is CPU. A GPU build can go in /etc/nixos/local.nix.
+  services.ollama.enable = true;
+
+  # Remote login as timoteo. Root password login stays off.
+  # The NixOS module opens port 22. Password login is the module default.
+  services.openssh.enable = true;
+
   services.tailscale = {
     enable = true;
     openFirewall = true;

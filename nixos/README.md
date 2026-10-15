@@ -19,6 +19,8 @@ Intel video decode, and thermald settings.
 - Battery policy from `powerdevilrc` (balanced on AC, power-saver on battery)
 - Bluetooth, firmware updates, and graphics. Intel video decode and thermald are in `/etc/nixos/local.nix` on this Inspiron only
 - Tailscale, with the firewall open. Log in once: `sudo tailscale up`
+- Ollama, on localhost only. Pull a model with `ollama pull`
+- SSH on port 22, so this user can log in remotely. Root still cannot use a password
 - Podman, a `docker` command, and `docker compose`, pulling public images from Docker Hub
 - Firefox, Brave, Edge, LibreOffice, Spotify, pCloud, Transmission Qt, Ghostty, Alacritty, Zed, VS Code
 - System tools: vim, nano, btop, git, curl. `gh` comes from the Brewfile
