@@ -145,12 +145,16 @@ install_nvim() {
     ln -s "$src" "$dest"
     printf '  linked %s\n' "$dest"
   fi
-  if ! command -v nvim >/dev/null 2>&1; then
+  # mise's neovim, so Mac and other Linux boxes don't pick up an older nvim.
+  if command -v mise >/dev/null 2>&1; then
+    info "Installing Neovim plugins..."
+    mise exec -- nvim --headless "+qa" || warn "nvim plugin install failed"
+  elif command -v nvim >/dev/null 2>&1; then
+    info "Installing Neovim plugins..."
+    nvim --headless "+qa" || warn "nvim plugin install failed"
+  else
     warn "nvim not on PATH; plugins install on first launch"
-    return
   fi
-  info "Installing Neovim plugins..."
-  nvim --headless "+qa" || warn "nvim plugin install failed"
 }
 
 apply_nixos() {

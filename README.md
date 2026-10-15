@@ -73,3 +73,5 @@ autostash on. GitHub auth via `gh`.
 
 Neovim's own syntax handles highlighting, including Markdown. Autocomplete is off.
 Plugins install through Neovim 0.12's `vim.pack` the first time `nvim` runs.
+`mise install` provides that Neovim on macOS and other Linux too. An older
+`nvim` still opens files; it just skips the plugins.

@@ -34,7 +34,18 @@ vim.cmd("filetype plugin indent on")
 
 local themes = { "default", "habamax", "retrobox", "unokai", "wildcharm" }
 local theme_index = 2
-vim.cmd.colorscheme(themes[theme_index])
+
+local function apply_theme(name)
+  return pcall(vim.cmd.colorscheme, name)
+end
+
+apply_theme(themes[theme_index])
+
+-- Plugins need Neovim 0.12 (mise installs it). Older nvim keeps the settings above.
+if not vim.pack then
+  vim.notify("Neovim 0.12 or newer is required for plugins. Run: mise install", vim.log.levels.WARN)
+  return
+end
 
 vim.pack.add({
   "https://github.com/nvim-lua/plenary.nvim",
@@ -65,6 +76,7 @@ end, { desc = "Replace in files" })
 
 vim.keymap.set("n", "<leader>t", function()
   theme_index = theme_index % #themes + 1
-  vim.cmd.colorscheme(themes[theme_index])
-  vim.notify(themes[theme_index])
+  if apply_theme(themes[theme_index]) then
+    vim.notify(themes[theme_index])
+  end
 end, { desc = "Next colorscheme" })
