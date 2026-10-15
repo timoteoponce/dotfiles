@@ -1,11 +1,6 @@
-# Tool initialisation. Order matters: brew -> mise -> everything mise provides.
+# Tool initialisation. Order matters: mise -> everything mise provides.
 
 status is-interactive; or exit
-
-# Homebrew (also sets MANPATH / HOMEBREW_PREFIX / etc.)
-if test -x /opt/homebrew/bin/brew
-    /opt/homebrew/bin/brew shellenv | source
-end
 
 # mise: version manager + the CLI tools in ~/.dotfiles/mise.toml
 if type -q mise

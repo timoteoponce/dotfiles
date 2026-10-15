@@ -1,7 +1,16 @@
-# Pinned tool + runtime layer. Linked to ~/.config/mise/config.toml.
+# The only package layer. Linked to ~/.config/mise/config.toml.
 # Install / update everything: mise install   (or: mise upgrade)
 
 [tools]
+gh = "latest"           # GitHub auth + git credential helper
+tmux = "latest"
+
+# Login shell on Linux: static build, no distro packages behind it. macOS has no
+# upstream fish tarball, so install.sh puts fish in ~/.local there instead.
+# "latest" is safe: install.sh re-points ~/.local/bin/fish at whatever mise
+# resolved, and that fixed path is what chsh and /etc/shells hold.
+"aqua:fish-shell/fish-shell" = { version = "latest", os = "linux" }
+
 neovim = "latest"
 ripgrep = "latest"
 fzf = "latest"
@@ -15,7 +24,7 @@ usage = "latest"        # completion backend used by some mise tools
 
 # Language runtimes. Per-project versions still win via a local
 # .mise.toml / .tool-versions.
-java = "adoptopenjdk-25.0.1+8.0.LTS"
+java = "temurin-25.0.1+8.0.LTS"    # AdoptOpenJDK is Temurin upstream now; the old id 404s
 clojure = "1.12.4"
 ruby = "3.3.6"
 # node = "lts"

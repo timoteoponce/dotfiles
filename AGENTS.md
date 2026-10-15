@@ -13,9 +13,8 @@ Configs: **fish** (`config/fish/`), **git** (`gitconfig` + `gitignore`), **tmux*
 
 ```
 .dotfiles/
-├── install.sh            # single idempotent installer (brew + mise + symlinks + nvim + chsh)
-├── Brewfile              # bootstrap layer: fish, git, gh, mise, tmux, ghostty cask, font
-├── mise.toml             # tool + runtime layer: pinned CLIs + java/clojure/ruby -> ~/.config/mise/config.toml
+├── install.sh            # single idempotent installer (mise + symlinks + fish + font + nvim + chsh)
+├── mise.toml             # the only package layer: CLIs + java/clojure/ruby -> ~/.config/mise/config.toml
 ├── gitconfig / gitignore # -> ~/.gitconfig / ~/.gitignore
 ├── tmux.conf             # -> ~/.tmux.conf
 ├── ideavimrc / psqlrc    # -> ~/.ideavimrc / ~/.psqlrc
@@ -28,12 +27,38 @@ Configs: **fish** (`config/fish/`), **git** (`gitconfig` + `gitignore`), **tmux*
     └── nvim/init.lua      # whole directory is symlinked to ~/.config/nvim
 ```
 
-## Two package layers
+## One package layer: mise
 
-- **Homebrew (`Brewfile`)** — only the shell, GUI casks, font, and a couple of
-  stable formulae. Installed with `brew bundle --no-upgrade`.
-- **mise (`mise.toml`)** — pinned standalone CLIs (ripgrep, fzf, bat, eza, delta,
-  zoxide, lazygit, lazydocker, neovim) plus language runtimes. `mise install`.
+`mise.toml` holds everything: `gh`, `tmux`, ripgrep, fzf, bat, eza, delta,
+zoxide, lazygit, lazydocker, neovim, plus language runtimes. `mise install`.
+No Homebrew, no Nix flake — `install.sh` fetches `mise` itself from its GitHub
+release into `~/.local/bin`.
+
+Outside mise, and only because it cannot be otherwise:
+
+- **`fish`** — a mise tool on Linux (`os = "linux"`). On macOS `install.sh`
+  unpacks the official release `.app` bundle's `usr/local` tree into `~/.local`.
+  Both end at `~/.local/bin/fish`, the login shell path `chsh` and `/etc/shells`
+  hold, so upgrading fish never invalidates the account record.
+- **`git`** — no upstream tarball exists; the OS one pairs with the system
+  credential helpers.
+- **`xclip`** on Linux — distro package, needed by tmux / Neovim.
+- **apps** (Ghostty, …) — never installed here; `config/ghostty/config` is linked
+  and the dmg URL lives in the README.
+
+## Refresh on every run
+
+`./install.sh` also moves things forward, each step only when the version really
+differs: mise (`self-update`, compared against the newest release tag), the
+tools (`mise upgrade`, newest *within each request*, so exact pins like `java`
+stay put), fish, and the Nerd Font (stamped at
+`${XDG_STATE_HOME:-~/.local/state}/dotfiles/font-version`).
+
+Rules that keep this safe — keep them when editing `install.sh`:
+
+- fail-soft everywhere: a failed refresh warns and keeps the working install
+- never replace a working binary before running it once (`fish --version`)
+- `DOTFILES_NO_REFRESH=1` skips the whole pass: install-only, offline-friendly
 
 ## Install / linking
 
@@ -57,7 +82,7 @@ is linked to `~/.config/nvim`. Existing real files are moved to
 ## fish conventions
 
 - `config.fish` stays tiny. Real config is `conf.d/*.fish`, sourced automatically
-  in filename order: `00-path` → `10-tools` (brew/mise/zoxide/fzf) → `aliases` → `abbr`.
+  in filename order: `00-path` → `10-tools` (mise/zoxide/fzf) → `aliases` → `abbr`.
 - `aliases.fish` = wrappers that need flags; `abbr.fish` = inline-expanding
   `g*`/`d*` git & docker abbreviations. Functions go in `functions/`.
 - Guard interactive-only code with `status is-interactive; or exit`.
@@ -76,6 +101,7 @@ is linked to `~/.config/nvim`. Existing real files are moved to
 sh -n install.sh
 fish -n config/fish/config.fish        # and conf.d/*.fish, functions/*.fish
 git config --file gitconfig --list >/dev/null
+mise config >/dev/null                 # linked mise.toml parses
 ghostty +show-config >/dev/null        # if ghostty installed
 ./install.sh                            # must be a no-op on a set-up machine
 ```
@@ -83,5 +109,10 @@ ghostty +show-config >/dev/null        # if ghostty installed
 ## Don't
 
 - Reintroduce `rcm`, `vimrc`, a `vim/` tree, or LazyVim. Neovim config is `config/nvim/init.lua`.
+- Reintroduce Homebrew, a `Brewfile`, `/opt/homebrew` PATH entries, or a Nix
+  flake / `nixos/`. mise plus the OS provides everything.
 - Put `user.email`, tokens, or corp URLs in tracked files — use `*.local`.
 - Add build-artifact patterns to the global `gitignore` (per-project only).
+- Track `config/nvim/nvim-pack-lock.json`: Neovim regenerates it through the
+  `config/nvim` symlink on every run, so committing it just churns the repo.
+  Pin plugin revs there only if reproducibility starts mattering.
