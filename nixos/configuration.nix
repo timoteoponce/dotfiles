@@ -77,6 +77,51 @@
     useRoutingFeatures = "client";
   };
 
+  # The key stays in this file on the machine. It is not copied into the
+  # Nix store. A reusable, pre-approved key from the Tailscale admin page,
+  # one line, mode 600. Once the node is Running, the daemon reconnects
+  # by itself; this timer only calls `tailscale up` when it is logged out.
+  systemd.services.tailscale-ensure-up = {
+    description = "Log Tailscale in when the node is down";
+    after = [
+      "tailscaled.service"
+      "network-online.target"
+    ];
+    wants = [
+      "tailscaled.service"
+      "network-online.target"
+    ];
+    path = [
+      pkgs.tailscale
+      pkgs.jq
+    ];
+    serviceConfig.Type = "oneshot";
+    script = ''
+      keyfile=/etc/nixos/tailscale-authkey
+      state="$(tailscale status --json --peers=false 2>/dev/null | jq -r '.BackendState // empty' || true)"
+      case "$state" in
+        Running)
+          exit 0
+          ;;
+        NeedsLogin|NeedsMachineAuth|Stopped)
+          if [ ! -f "$keyfile" ]; then
+            echo "Tailscale is $state. Add a reusable auth key as the only line of $keyfile."
+            exit 0
+          fi
+          tailscale up --timeout 30s --auth-key "$(tr -d '\n' < "$keyfile")"
+          ;;
+      esac
+    '';
+  };
+  systemd.timers.tailscale-ensure-up = {
+    description = "Check Tailscale while it is logged out";
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnBootSec = "20s";
+      OnUnitInactiveSec = "1min";
+    };
+  };
+
   # `docker` is Podman. `docker compose` calls pkgs.docker-compose (Compose v2).
   # Unqualified image names search Docker Hub.
   virtualisation.podman = {

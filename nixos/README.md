@@ -18,7 +18,7 @@ Intel video decode, and thermald settings.
 - KDE Plasma 6, the current user `timoteo`, fish as the login shell
 - Battery policy from `powerdevilrc` (balanced on AC, power-saver on battery)
 - Bluetooth, firmware updates, and graphics. Intel video decode and thermald are in `/etc/nixos/local.nix` on this Inspiron only
-- Tailscale, with the firewall open. Log in once: `sudo tailscale up`
+- Tailscale. The daemon starts at boot. A reusable auth key in `/etc/nixos/tailscale-authkey` logs the node in whenever it is down. That file is not in git
 - Ollama for a remote coding machine, reachable only over Tailscale on port 11434. Pull a model with `ollama pull`
 - SSH on port 22, so this user can log in remotely. Root still cannot use a password
 - Podman, a `docker` command, and `docker compose`, pulling public images from Docker Hub

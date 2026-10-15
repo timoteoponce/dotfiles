@@ -174,6 +174,9 @@ apply_nixos() {
       export NIX_LD=/run/current-system/sw/share/nix-ld/lib/ld.so
       export NIX_LD_LIBRARY_PATH=/run/current-system/sw/share/nix-ld/lib
     fi
+    if [ ! -f /etc/nixos/tailscale-authkey ]; then
+      warn "Tailscale will not log in by itself until /etc/nixos/tailscale-authkey exists"
+    fi
   else
     warn "nixos-rebuild failed; system packages may be missing"
   fi
