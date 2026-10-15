@@ -5,8 +5,9 @@
 Personal dotfiles for macOS (+ light Linux). Kept deliberately small.
 
 Configs: **fish** (`config/fish/`), **git** (`gitconfig` + `gitignore`), **tmux**
-(`tmux.conf`), **Ghostty** (`config/ghostty/`), **lazygit** / **lazydocker**
-(`config/`), **bat** (`config/bat/`), **IdeaVim** (`ideavimrc`), **psql** (`psqlrc`).
+(`tmux.conf`), **Ghostty** (`config/ghostty/`), **Alacritty**
+(`config/alacritty/`), **lazygit** / **lazydocker** (`config/`), **bat**
+(`config/bat/`), **IdeaVim** (`ideavimrc`), **psql** (`psqlrc`).
 Neovim/LazyVim lives at `~/.config/nvim` and is **not** managed here.
 
 ## Structure
@@ -14,7 +15,7 @@ Neovim/LazyVim lives at `~/.config/nvim` and is **not** managed here.
 ```
 .dotfiles/
 ├── install.sh            # single idempotent installer (brew + mise + symlinks + LazyVim + chsh)
-├── Brewfile              # bootstrap layer: fish, git, gh, mise, tmux, ghostty cask, font
+├── Brewfile              # bootstrap layer: fish, git, gh, mise, tmux, ghostty + alacritty casks, font
 ├── mise.toml             # tool + runtime layer: pinned CLIs + java/clojure/ruby -> ~/.config/mise/config.toml
 ├── gitconfig / gitignore # -> ~/.gitconfig / ~/.gitignore
 ├── tmux.conf             # -> ~/.tmux.conf
@@ -22,6 +23,7 @@ Neovim/LazyVim lives at `~/.config/nvim` and is **not** managed here.
 └── config/
     ├── fish/{config.fish, conf.d/*.fish, functions/*.fish}
     ├── ghostty/config
+    ├── alacritty/alacritty.toml
     ├── lazygit/config.yml
     ├── lazydocker/config.yml
     └── bat/config

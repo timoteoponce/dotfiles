@@ -29,6 +29,7 @@ files like `fish_variables` stay local):
 | `aerospace.toml` | `~/.aerospace.toml` |
 | `config/fish/{config.fish,conf.d/*,functions/*}` | `~/.config/fish/…` |
 | `config/ghostty/config` | `~/.config/ghostty/config` |
+| `config/alacritty/alacritty.toml` | `~/.config/alacritty/alacritty.toml` |
 | `config/lazygit/config.yml` | `~/.config/lazygit/config.yml` |
 | `config/lazydocker/config.yml` | `~/.config/lazydocker/config.yml` |
 | `config/bat/config` | `~/.config/bat/config` |

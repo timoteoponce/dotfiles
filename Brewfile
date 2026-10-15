@@ -8,6 +8,7 @@ brew "mise"   # drives the tool + runtime layer (mise.toml)
 brew "tmux"
 
 cask "ghostty"
+cask "alacritty"
 cask "aerospace" # tiling window manager
 cask "font-jetbrains-mono-nerd-font"
 

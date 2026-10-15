@@ -99,6 +99,7 @@ link_dotfiles() {
   done
 
   link_file config/ghostty/config        "$CONFIG_HOME/ghostty/config"
+  link_file config/alacritty/alacritty.toml "$CONFIG_HOME/alacritty/alacritty.toml"
   link_file config/lazygit/config.yml    "$CONFIG_HOME/lazygit/config.yml"
   link_file config/lazydocker/config.yml "$CONFIG_HOME/lazydocker/config.yml"
   link_file config/bat/config            "$CONFIG_HOME/bat/config"

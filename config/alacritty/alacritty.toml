@@ -1,0 +1,10 @@
+# Alacritty. Validate by launching; config is TOML.
+# Font must be a Nerd Font for eza/ls icons to render.
+# Matches Ghostty's family. See ~/.config/ghostty/config.
+
+[font]
+size = 12
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
+italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
+bold_italic = { family = "JetBrainsMono Nerd Font", style = "Bold Italic" }
