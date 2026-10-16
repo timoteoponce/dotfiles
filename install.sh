@@ -189,6 +189,7 @@ link_dotfiles() {
   link_file config/lazygit/config.yml    "$CONFIG_HOME/lazygit/config.yml"
   link_file config/lazydocker/config.yml "$CONFIG_HOME/lazydocker/config.yml"
   link_file config/bat/config            "$CONFIG_HOME/bat/config"
+  link_file config/containers/registries.conf "$CONFIG_HOME/containers/registries.conf"
 
   # personal scripts -> ~/.local/bin (on PATH; git auto-discovers git-* as subcommands)
   for f in "$DOTFILES_DIR"/bin/*; do
