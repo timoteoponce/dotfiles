@@ -27,6 +27,9 @@ usage = "latest"        # completion backend used by some mise tools
 java = "temurin-25.0.1+8.0.LTS"    # AdoptOpenJDK is Temurin upstream now; the old id 404s
 clojure = "1.12.4"
 ruby = "3.3.6"
+btop = "latest"
+opencode = { version = "latest", allow_builds = ["@opencode/cli"] }
+copilot = "latest"
 # node = "lts"
 # python = "3.12"
 # go = "latest"
