@@ -21,7 +21,7 @@ On first run the script asks for your git name and email and writes them to
 | Alacritty | Cask. Homebrew disabled the official cask on 2026-09-01 (Gatekeeper). `brew bundle` warns and continues | Not installed |
 | mise | Official binary at `~/.local/bin/mise` (`https://mise.run`). On Linux that build is the static one | Same |
 
-`mise.toml` tracks `latest` for the CLIs: neovim, ripgrep, fzf, bat, eza, zoxide, lazygit, lazydocker, usage. Language runtimes are not global. Put java, clojure, ruby, node, python, or go in a project's own `mise.toml`.
+`mise.toml` tracks `latest` for the CLIs: neovim, ripgrep, fzf, bat, eza, zoxide, lazygit, lazydocker, usage, btop, opencode, copilot. Language runtimes are not global. Put java, clojure, ruby, node, python, or go in a project's own `mise.toml`.
 
 Update the casks and formulae with `brew bundle`. Update the CLIs with `mise upgrade`.
 
@@ -41,6 +41,7 @@ files like `fish_variables` stay local):
 | `config/lazygit/config.yml` | `~/.config/lazygit/config.yml` |
 | `config/lazydocker/config.yml` | `~/.config/lazydocker/config.yml` |
 | `config/bat/config` | `~/.config/bat/config` |
+| `config/containers/registries.conf` | `~/.config/containers/registries.conf` |
 | `mise.toml` | `~/.config/mise/config.toml` |
 
 `config/nvim` is the exception: the whole directory is linked to `~/.config/nvim`.

@@ -28,6 +28,7 @@ Configs: **fish** (`config/fish/`), **git** (`gitconfig` + `gitignore`), **tmux*
     ├── lazygit/config.yml
     ├── lazydocker/config.yml
     ├── bat/config
+    ├── containers/registries.conf
     └── nvim/init.lua      # whole directory is symlinked to ~/.config/nvim
 ```
 
@@ -42,8 +43,8 @@ Configs: **fish** (`config/fish/`), **git** (`gitconfig` + `gitignore`), **tmux*
 - **mise** — the official `https://mise.run` binary at `~/.local/bin/mise`.
   Never a Homebrew formula (that formula's fish hook hardcodes its own binary).
   `mise.toml` tracks `latest` for neovim, ripgrep, fzf, bat, eza, zoxide,
-  lazygit, lazydocker, and usage. Language runtimes are per-project, commented
-  examples only.
+  lazygit, lazydocker, usage, btop, opencode, and copilot. Language runtimes
+  are per-project, commented examples only.
 
 ## Install / linking
 
