@@ -1,5 +1,6 @@
-# Pinned tool + runtime layer. Linked to ~/.config/mise/config.toml.
-# Install / update everything: mise install   (or: mise upgrade)
+# CLI tools. Linked to ~/.config/mise/config.toml.
+# Install: mise install    Update: mise upgrade
+# These track "latest". Language runtimes belong in a project's own mise.toml.
 
 [tools]
 neovim = "latest"
@@ -7,17 +8,15 @@ ripgrep = "latest"
 fzf = "latest"
 bat = "latest"
 eza = "latest"
-delta = "latest"       # git-delta; binary is still `delta`
 zoxide = "latest"
 lazygit = "latest"
 lazydocker = "latest"
 usage = "latest"        # completion backend used by some mise tools
 
-# Language runtimes. Per-project versions still win via a local
-# .mise.toml / .tool-versions.
-java = "adoptopenjdk-25.0.1+8.0.LTS"
-clojure = "1.12.4"
-ruby = "3.3.6"
+# Per-project, not global:
+# java = "temurin-21"
+# clojure = "1.12.4"
+# ruby = "3.3.6"
 # node = "lts"
 # python = "3.12"
 # go = "latest"

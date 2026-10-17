@@ -5,6 +5,11 @@
 #   - correct symlinks are left untouched
 #   - a step that fails warns and the rest still runs
 #
+# macOS: install Homebrew if it is missing, then brew bundle (fish, git, gh,
+# tmux, and the casks).
+# Linux: Homebrew is only installed when fish, git, gh, or tmux is missing.
+# mise is always the official binary at ~/.local/bin/mise, never a brew formula.
+#
 # Env:
 #   DOTFILES_YES=1   answer "yes" to the shell-change prompt (non-interactive)
 
@@ -29,35 +34,73 @@ login_shell() {
   esac
 }
 
+# Apple Silicon, Intel, then Linux. A custom prefix already on PATH still works.
+load_brew_env() {
+  if [ -x /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  elif [ -x /usr/local/bin/brew ]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+  elif [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  elif command -v brew >/dev/null 2>&1; then
+    eval "$(brew shellenv)"
+  fi
+}
+
 install_homebrew() {
+  load_brew_env
   if command -v brew >/dev/null 2>&1; then
     info "Homebrew present"
-  else
-    info "Installing Homebrew..."
-    # NixOS has no /bin/bash until the flake's tmpfiles symlinks are in place.
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || {
-      warn "Homebrew install failed; skipping brew steps"; return 1
-    }
+    return 0
   fi
-  [ -x /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
-  [ -x /home/linuxbrew/.linuxbrew/bin/brew ] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  info "Installing Homebrew..."
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || {
+    warn "Homebrew install failed"
+    return 1
+  }
+  load_brew_env
+  if ! command -v brew >/dev/null 2>&1; then
+    warn "Homebrew installed but not on PATH"
+    return 1
+  fi
   return 0
 }
 
-brew_bundle() {
-  command -v brew >/dev/null 2>&1 || { warn "brew not on PATH; skipping Brewfile"; return; }
-  info "Installing packages from Brewfile..."
-  if [ "$(detect_os)" = "linux" ]; then
-    # casks (ghostty, fonts) are macOS-only: install the formulae only
-    grep '^brew ' "$DOTFILES_DIR/Brewfile" | sed 's/^brew "\([^"]*\)".*/\1/' \
-      | xargs brew install || warn "some brew formulae failed"
-    # clipboard bridge for tmux / Neovim on Linux
-    brew install xclip >/dev/null 2>&1 || warn "xclip install skipped"
-  else
-    # --no-upgrade: re-runs only install what's missing, they don't churn your
-    # toolchain. Run `brew upgrade` yourself when you actually want new versions.
+# Drop the Homebrew formula so its fish vendor hook cannot shadow ~/.local/bin/mise.
+remove_brew_mise() {
+  command -v brew >/dev/null 2>&1 || return 0
+  brew list --formula mise >/dev/null 2>&1 || return 0
+  info "Removing Homebrew mise"
+  brew uninstall mise || warn "could not uninstall Homebrew mise"
+}
+
+brew_packages() {
+  if [ "$(detect_os)" = "macos" ]; then
+    install_homebrew || { warn "skipping brew bundle"; remove_brew_mise; return; }
+    info "Installing packages from Brewfile..."
+    # --no-upgrade: re-runs only install what's missing.
     brew bundle --file "$DOTFILES_DIR/Brewfile" --no-upgrade || warn "brew bundle reported errors"
+  else
+    missing=""
+    for cmd in fish git gh tmux; do
+      command -v "$cmd" >/dev/null 2>&1 || missing="$missing $cmd"
+    done
+    if [ -z "$missing" ]; then
+      info "fish, git, gh, and tmux present; skipping Homebrew"
+    else
+      info "Missing CLI tools:$missing"
+      if install_homebrew; then
+        for cmd in fish git gh tmux; do
+          command -v "$cmd" >/dev/null 2>&1 && continue
+          info "Installing $cmd..."
+          brew install "$cmd" || warn "$cmd install failed"
+        done
+      else
+        warn "Install these yourself:$missing"
+      fi
+    fi
   fi
+  remove_brew_mise
 }
 
 # link_file <repo-relative-src> <absolute-dest>
@@ -113,23 +156,80 @@ link_dotfiles() {
 }
 
 ensure_local_files() {
-  if [ ! -e "$HOME/.gitconfig.local" ]; then
-    printf '# Machine-specific git config (not tracked). Your user.email, corp hosts, credential managers, etc.\n[user]\n\temail = ponce.timoteo@gmail.com\n' > "$HOME/.gitconfig.local"
-    info "created ~/.gitconfig.local"
-  fi
   if [ ! -e "$CONFIG_HOME/fish/local.fish" ]; then
     mkdir -p "$CONFIG_HOME/fish"
-    printf '# Machine-specific fish config (not tracked). PATH tweaks, installer snippets, work stuff.\n' > "$CONFIG_HOME/fish/local.fish"
+    printf '%s\n' '# Machine-specific fish config (not tracked). PATH tweaks, installer snippets, work stuff.' > "$CONFIG_HOME/fish/local.fish"
     info "created ~/.config/fish/local.fish"
   fi
 }
 
+# Name and email stay in ~/.gitconfig.local. Ask only for values that are missing.
+ensure_git_identity() {
+  localfile="$HOME/.gitconfig.local"
+  if [ ! -e "$localfile" ]; then
+    printf '%s\n' '# Machine-specific git config (not tracked).' > "$localfile"
+    info "created ~/.gitconfig.local"
+  fi
+
+  name=$(git config --file "$localfile" --get user.name 2>/dev/null || true)
+  email=$(git config --file "$localfile" --get user.email 2>/dev/null || true)
+  if [ -n "$name" ] && [ -n "$email" ]; then
+    return 0
+  fi
+  if [ ! -t 0 ]; then
+    warn "No TTY. Set user.name and user.email in ~/.gitconfig.local, then re-run."
+    return 0
+  fi
+
+  if [ -z "$name" ]; then
+    printf 'Git user.name: '
+    read -r name || name=""
+    if [ -n "$name" ]; then
+      git config --file "$localfile" user.name "$name"
+    else
+      warn "user.name left unset"
+    fi
+  fi
+  if [ -z "$email" ]; then
+    printf 'Git user.email: '
+    read -r email || email=""
+    if [ -n "$email" ]; then
+      git config --file "$localfile" user.email "$email"
+    else
+      warn "user.email left unset"
+    fi
+  fi
+}
+
+mise_bin() {
+  if [ -x "$HOME/.local/bin/mise" ]; then
+    printf '%s\n' "$HOME/.local/bin/mise"
+  elif command -v mise >/dev/null 2>&1; then
+    command -v mise
+  fi
+}
+
+install_mise() {
+  if [ -x "$HOME/.local/bin/mise" ]; then
+    info "mise present at ~/.local/bin/mise"
+    return 0
+  fi
+  info "Installing mise to ~/.local/bin/mise..."
+  mkdir -p "$HOME/.local/bin"
+  curl -fsSL https://mise.run | sh || { warn "mise install failed"; return 1; }
+}
+
 mise_install() {
-  command -v mise >/dev/null 2>&1 || { warn "mise not on PATH; skipping (run 'mise install' after restart)"; return; }
+  bin=$(mise_bin) || true
+  if [ -z "$bin" ]; then
+    warn "mise not installed; skipping tool install"
+    return 0
+  fi
   info "Installing tools via mise..."
-  mise trust "$CONFIG_HOME/mise/config.toml" >/dev/null 2>&1 || true
-  mise trust "$DOTFILES_DIR/mise.toml" >/dev/null 2>&1 || true
-  mise install || warn "mise install reported errors"
+  "$bin" trust "$CONFIG_HOME/mise/config.toml" >/dev/null 2>&1 || true
+  "$bin" trust "$DOTFILES_DIR/mise.toml" >/dev/null 2>&1 || true
+  "$bin" install || warn "mise install reported errors"
+  "$bin" completion fish --install || warn "mise fish completion install failed"
 }
 
 install_nvim() {
@@ -147,10 +247,10 @@ install_nvim() {
     ln -s "$src" "$dest"
     printf '  linked %s\n' "$dest"
   fi
-  # mise's neovim, so Mac and other Linux boxes don't pick up an older nvim.
-  if command -v mise >/dev/null 2>&1; then
+  bin=$(mise_bin) || true
+  if [ -n "$bin" ]; then
     info "Installing Neovim plugins..."
-    mise exec -- nvim --headless "+qa" || warn "nvim plugin install failed"
+    "$bin" exec -- nvim --headless "+qa" || warn "nvim plugin install failed"
   elif command -v nvim >/dev/null 2>&1; then
     info "Installing Neovim plugins..."
     nvim --headless "+qa" || warn "nvim plugin install failed"
@@ -159,40 +259,18 @@ install_nvim() {
   fi
 }
 
-apply_nixos() {
-  [ "$(detect_os)" = "linux" ] || return 0
-  [ -e /etc/NIXOS ] || return 0
-  [ -f "$DOTFILES_DIR/flake.nix" ] || { warn "no flake.nix; skipping NixOS rebuild"; return; }
-  if [ ! -f /etc/nixos/hardware-configuration.nix ]; then
-    warn "missing /etc/nixos/hardware-configuration.nix"
-    warn "run: sudo nixos-generate-config"
-    return
-  fi
-  info "Applying NixOS configuration (laptop)..."
-  # --impure lets the flake read this machine's /etc/nixos files.
-  # nixos-rebuild itself turns the flakes feature on.
-  if sudo nixos-rebuild switch --flake "$DOTFILES_DIR#laptop" --impure; then
-    if [ -e /run/current-system/sw/share/nix-ld/lib/ld.so ]; then
-      export NIX_LD=/run/current-system/sw/share/nix-ld/lib/ld.so
-      export NIX_LD_LIBRARY_PATH=/run/current-system/sw/share/nix-ld/lib
-    fi
-  else
-    warn "nixos-rebuild failed; system packages may be missing"
-  fi
-}
-
 change_shell() {
-  # The NixOS flake sets the login shell to its own fish. chsh to Homebrew's
-  # fish can point login at a binary that does not start yet.
-  if [ -e /etc/NIXOS ]; then
-    info "NixOS owns the login shell; leaving it alone"
+  fish_path="$(command -v fish)" || {
+    warn "fish not found; skipping shell change"
     return
-  fi
-  fish_path="$(command -v fish)" || { warn "fish not found; skipping shell change"; return; }
+  }
   [ "$(login_shell)" = "$fish_path" ] && { info "login shell already fish"; return; }
 
   if [ "${DOTFILES_YES:-}" = "1" ]; then
     reply=y
+  elif [ ! -t 0 ]; then
+    warn "No TTY. Run 'chsh -s $fish_path' to switch the login shell."
+    return
   else
     printf "Change login shell to fish? [y/N] "
     read -r reply
@@ -213,11 +291,11 @@ main() {
   [ -d "$DOTFILES_DIR" ] || { echo "Clone dotfiles to $DOTFILES_DIR first"; exit 1; }
   info "Detected OS: $(detect_os)"
 
-  apply_nixos
-  install_homebrew
-  brew_bundle
+  brew_packages
   link_dotfiles
   ensure_local_files
+  ensure_git_identity
+  install_mise
   mise_install
   install_nvim
   change_shell

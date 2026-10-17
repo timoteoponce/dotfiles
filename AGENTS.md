@@ -2,7 +2,8 @@
 
 ## Overview
 
-Personal dotfiles for macOS (+ light Linux). Kept deliberately small.
+Personal dotfiles for macOS, with a Linux path that uses the same CLI tools
+when they are already installed. Kept deliberately small.
 
 Configs: **fish** (`config/fish/`), **git** (`gitconfig` + `gitignore`), **tmux**
 (`tmux.conf`), **Ghostty** (`config/ghostty/`), **Alacritty**
@@ -14,9 +15,9 @@ Configs: **fish** (`config/fish/`), **git** (`gitconfig` + `gitignore`), **tmux*
 
 ```
 .dotfiles/
-├── install.sh            # single idempotent installer (brew + mise + symlinks + nvim + chsh)
-├── Brewfile              # bootstrap layer: fish, git, gh, mise, tmux, ghostty + alacritty casks, font
-├── mise.toml             # tool + runtime layer: pinned CLIs + java/clojure/ruby -> ~/.config/mise/config.toml
+├── install.sh            # idempotent installer (brew + official mise + symlinks + nvim + chsh)
+├── Brewfile              # macOS bootstrap: fish, git, gh, tmux, ghostty, alacritty, aerospace, font
+├── mise.toml             # CLIs at "latest" -> ~/.config/mise/config.toml
 ├── gitconfig / gitignore # -> ~/.gitconfig / ~/.gitignore
 ├── tmux.conf             # -> ~/.tmux.conf
 ├── ideavimrc / psqlrc    # -> ~/.ideavimrc / ~/.psqlrc
@@ -30,46 +31,62 @@ Configs: **fish** (`config/fish/`), **git** (`gitconfig` + `gitignore`), **tmux*
     └── nvim/init.lua      # whole directory is symlinked to ~/.config/nvim
 ```
 
-## Two package layers
+## Packages
 
-- **Homebrew (`Brewfile`)** — only the shell, GUI casks, font, and a couple of
-  stable formulae. Installed with `brew bundle --no-upgrade`.
-- **mise (`mise.toml`)** — pinned standalone CLIs (ripgrep, fzf, bat, eza, delta,
-  zoxide, lazygit, lazydocker, neovim) plus language runtimes. `mise install`.
+- **Homebrew (`Brewfile`)** — macOS installs Homebrew when it is missing, then
+  `brew bundle --no-upgrade`. Formulae: fish, git, gh, tmux. Casks: Ghostty,
+  Alacritty, Aerospace, JetBrainsMono Nerd Font. The Alacritty cask is disabled
+  upstream (Gatekeeper, 2026-09-01); bundle warns and continues. Do not add a tap.
+- **Linux** — Homebrew runs only when `fish`, `git`, `gh`, or `tmux` is missing,
+  and then installs only those formulae. No casks.
+- **mise** — the official `https://mise.run` binary at `~/.local/bin/mise`.
+  Never a Homebrew formula (that formula's fish hook hardcodes its own binary).
+  `mise.toml` tracks `latest` for neovim, ripgrep, fzf, bat, eza, zoxide,
+  lazygit, lazydocker, and usage. Language runtimes are per-project, commented
+  examples only.
 
 ## Install / linking
 
-`./install.sh` does everything and is safe to re-run: installed packages are
-skipped, correct symlinks are left untouched, and a failing step warns instead of
-aborting. It symlinks **individual files** so tool-managed files like
-`fish_variables` stay local. `config/nvim` is the exception: the whole directory
-is linked to `~/.config/nvim`. Existing real files are moved to
-`*.bak.<timestamp>` before linking. There is no `rcm` — do not reintroduce it.
+`./install.sh` is safe to re-run: installed packages are skipped, correct
+symlinks are left untouched, and a failing step warns instead of aborting.
+It symlinks **individual files** so tool-managed files like `fish_variables`
+stay local. `config/nvim` is the exception: the whole directory is linked to
+`~/.config/nvim`. Existing real files are moved to `*.bak.<timestamp>` before
+linking. There is no `rcm` — do not reintroduce it.
+
+The first run on a new machine asks for git `user.name` and `user.email` and
+writes them with `git config --file ~/.gitconfig.local`. Later runs ask only
+for a value that is still empty. No TTY: it warns and continues.
 
 ## Machine-specific / secret bits (untracked)
 
-- `~/.gitconfig.local` — `user.email`, credential managers, corp hosts. Pulled in
-  via `[include]` in `gitconfig`. The tracked `gitconfig` has **no email** on
-  purpose; don't add one.
+- `~/.gitconfig.local` — `user.name`, `user.email`, credential managers, corp
+  hosts. Pulled in via `[include]` in `gitconfig`. The tracked `gitconfig` has
+  **no name and no email** on purpose; don't add either.
 - `~/.config/fish/local.fish` — machine-specific PATH, aliases, and work-only
   snippets. Sourced at the end of `config.fish`.
 
-`install.sh` creates both if missing.
+`install.sh` creates both if missing. It does not edit an existing `local.fish`.
 
 ## fish conventions
 
 - `config.fish` stays tiny. Real config is `conf.d/*.fish`, sourced automatically
-  in filename order: `00-path` → `10-tools` (brew/mise/zoxide/fzf) → `aliases` → `abbr`.
+  in filename order: `00-path` (`~/.local/bin`) → `10-tools` (brew shellenv for
+  `/opt/homebrew`, `/usr/local`, or Linuxbrew, then mise, for every shell;
+  zoxide and fzf only when interactive) → `aliases` → `abbr`.
 - `aliases.fish` = wrappers that need flags; `abbr.fish` = inline-expanding
   `g*`/`d*` git & docker abbreviations. Functions go in `functions/`.
-- Guard interactive-only code with `status is-interactive; or exit`.
-- Prefer `set -gx` over `set -Ux` in tracked files (universal vars persist
-  per-machine and can't be reset from the repo).
+- Guard interactive-only code with `status is-interactive; or exit`. brew and
+  mise stay above that guard.
+- Prefer `set -gx` and `fish_add_path -g` over universal variables. Universal
+  vars persist per-machine and can't be reset from the repo. `local.fish` should
+  use `-g` too; then `set -eU fish_user_paths` once.
 
 ## git conventions
 
 - INI, 2-space indent within `[section]`.
-- `delta` is pager + interactive/diff filter; merge tool is `nvim-merge`.
+- Pager is `less`. Merge tool is `nvim-merge`. tmux copy is OSC 52
+  (`copy-selection-and-cancel`), not an external clipboard program.
 - Keep aliases short (`ci`, `co`, `df`, `st`, `lg`, `undo`).
 
 ## Validation before committing
@@ -84,6 +101,7 @@ ghostty +show-config >/dev/null        # if ghostty installed
 
 ## Don't
 
-- Reintroduce `rcm`, `vimrc`, a `vim/` tree, or LazyVim. Neovim config is `config/nvim/init.lua`.
-- Put `user.email`, tokens, or corp URLs in tracked files — use `*.local`.
+- Reintroduce `rcm`, `vimrc`, a `vim/` tree, LazyVim, NixOS, or a Homebrew mise formula.
+- Put `user.name`, `user.email`, tokens, or corp URLs in tracked files — use `*.local`.
 - Add build-artifact patterns to the global `gitignore` (per-project only).
+- Install xclip or point tmux copy at a clipboard CLI. OSC 52 is the clipboard path.

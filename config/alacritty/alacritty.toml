@@ -8,3 +8,7 @@ normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
 bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
 italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
 bold_italic = { family = "JetBrainsMono Nerd Font", style = "Bold Italic" }
+
+# tmux copy uses OSC 52. Ghostty accepts that on its own.
+[terminal]
+osc52 = "CopyPaste"

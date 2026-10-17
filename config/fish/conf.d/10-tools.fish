@@ -1,16 +1,21 @@
-# Tool initialisation. Order matters: brew -> mise -> everything mise provides.
+# Tool initialisation. brew and mise run for every shell so `fish -c` can see
+# them. zoxide and fzf are interactive-only.
 
-status is-interactive; or exit
-
-# Homebrew (also sets MANPATH / HOMEBREW_PREFIX / etc.)
 if test -x /opt/homebrew/bin/brew
     /opt/homebrew/bin/brew shellenv | source
+else if test -x /usr/local/bin/brew
+    /usr/local/bin/brew shellenv | source
+else if test -x /home/linuxbrew/.linuxbrew/bin/brew
+    /home/linuxbrew/.linuxbrew/bin/brew shellenv | source
 end
 
-# mise: version manager + the CLI tools in ~/.dotfiles/mise.toml
-if type -q mise
+if test -x $HOME/.local/bin/mise
+    $HOME/.local/bin/mise activate fish | source
+else if type -q mise
     mise activate fish | source
 end
+
+status is-interactive; or exit
 
 # zoxide: `z <dir>` jumps, `zi` picks interactively
 if type -q zoxide

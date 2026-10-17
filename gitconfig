@@ -1,9 +1,5 @@
-[user]
-  name = Timoteo Ponce
-  # email is set per-machine in ~/.gitconfig.local (kept out of the public repo)
-
-# Machine-specific / work config: user.email, credential managers, corp hosts, …
-# Created by install.sh if missing; never linked from the repo.
+# Name and email live in ~/.gitconfig.local. install.sh asks for them.
+# That file is never linked from the repo.
 [include]
   path = ~/.gitconfig.local
 
