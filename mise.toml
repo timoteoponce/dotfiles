@@ -13,8 +13,8 @@ lazygit = "latest"
 lazydocker = "latest"
 usage = "latest"        # completion backend used by some mise tools
 btop = "latest"
-opencode = { version = "latest", allow_builds = ["@opencode/cli"] }
-copilot = "latest"
+# opencode = { version = "latest", allow_builds = ["@opencode/cli"] }
+# copilot = "latest"
 
 # Per-project, not global:
 # java = "temurin-21"
