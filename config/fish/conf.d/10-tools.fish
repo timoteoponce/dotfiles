@@ -15,6 +15,10 @@ else if type -q mise
     mise activate fish | source
 end
 
+# Default editor for every fish, so `fish -c` and tools that shell out see it.
+set -gx EDITOR nvim
+set -gx VISUAL nvim
+
 status is-interactive; or exit
 
 # zoxide: `z <dir>` jumps, `zi` picks interactively

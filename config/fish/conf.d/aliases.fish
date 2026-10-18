@@ -17,7 +17,7 @@ if type -q fzf
     alias ff "fzf --preview 'bat --style=numbers --color=always {}'"
 end
 
-alias e $EDITOR
+alias e nvim
 alias n nvim
 alias lzg lazygit
 alias lzd lazydocker

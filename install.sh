@@ -74,8 +74,43 @@ remove_brew_mise() {
   brew uninstall mise || warn "could not uninstall Homebrew mise"
 }
 
+# Ask for the sudo password once and keep the timestamp fresh until we exit.
+SUDO_READY=""
+ensure_sudo() {
+  [ -n "$SUDO_READY" ] && return 0
+  [ "$(id -u)" = "0" ] && { SUDO_READY=1; return 0; }
+  command -v sudo >/dev/null 2>&1 || return 1
+  [ -t 0 ] || sudo -n true 2>/dev/null || return 1
+  sudo -v || return 1
+  SUDO_READY=1
+  ( while kill -0 "$$" 2>/dev/null; do sudo -n true 2>/dev/null; sleep 50; done ) &
+}
+
+# Nerd Font so eza/ls icons render. macOS gets it from the Brewfile cask.
+install_font() {
+  [ "$(detect_os)" = "linux" ] || return 0
+  fonts_dir="$HOME/.local/share/fonts/JetBrainsMonoNerdFont"
+  if ls "$fonts_dir"/*.ttf >/dev/null 2>&1; then
+    info "JetBrainsMono Nerd Font present"
+    return 0
+  fi
+  info "Installing JetBrainsMono Nerd Font..."
+  tmp="$(mktemp -d)"
+  if curl -fsSL -o "$tmp/font.tar.xz" \
+      https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz \
+    && mkdir -p "$fonts_dir" \
+    && tar -xJf "$tmp/font.tar.xz" -C "$fonts_dir" --wildcards '*.ttf'; then
+    command -v fc-cache >/dev/null 2>&1 && fc-cache -f "$HOME/.local/share/fonts" >/dev/null 2>&1
+    info "Font installed. Set your terminal font to 'JetBrainsMono Nerd Font'."
+  else
+    warn "Nerd Font install failed"
+  fi
+  rm -rf "$tmp"
+}
+
 brew_packages() {
   if [ "$(detect_os)" = "macos" ]; then
+    command -v brew >/dev/null 2>&1 || ensure_sudo || true
     install_homebrew || { warn "skipping brew bundle"; remove_brew_mise; return; }
     info "Installing packages from Brewfile..."
     # --no-upgrade: re-runs only install what's missing.
@@ -89,6 +124,8 @@ brew_packages() {
       info "fish, git, gh, and tmux present; skipping Homebrew"
     else
       info "Missing CLI tools:$missing"
+      command -v brew >/dev/null 2>&1 || load_brew_env
+      command -v brew >/dev/null 2>&1 || ensure_sudo || true
       if install_homebrew; then
         for cmd in fish git gh tmux; do
           command -v "$cmd" >/dev/null 2>&1 && continue
@@ -281,10 +318,12 @@ change_shell() {
     *) info "skipping shell change"; return ;;
   esac
 
+  # sudo chsh reuses the cached sudo password instead of prompting again.
+  ensure_sudo || { warn "sudo unavailable. Run 'chsh -s $fish_path' yourself."; return; }
   if [ "$(detect_os)" = "linux" ] && ! grep -q "^$fish_path$" /etc/shells 2>/dev/null; then
     echo "$fish_path" | sudo tee -a /etc/shells >/dev/null
   fi
-  chsh -s "$fish_path" && info "login shell set to fish (restart your terminal)"
+  sudo chsh -s "$fish_path" "$(id -un)" && info "login shell set to fish (restart your terminal)"
 }
 
 main() {
@@ -293,6 +332,7 @@ main() {
   info "Detected OS: $(detect_os)"
 
   brew_packages
+  install_font
   link_dotfiles
   ensure_local_files
   ensure_git_identity
